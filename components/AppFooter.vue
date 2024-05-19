@@ -15,8 +15,8 @@
           </NuxtLink>
 
           <p class="text-gray-600 dark:text-gray-300 pt-6">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia
-            nemo, veritatis
+            Липецкая официальная «Университетская» лига Международного Союза
+            КВН.
           </p>
         </div>
 
