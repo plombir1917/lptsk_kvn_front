@@ -1,17 +1,21 @@
 <script setup lang="ts">
 useHead({
-  title: 'Podux - Home',
+  title: 'Липецкий КВН',
   meta: [
-    { name: 'description', content: 'Podux Podcast landing page website.' },
+    {
+      name: 'description',
+      content: 'Сайт Липецкой официальной лиги МС КВН "Университетская"',
+    },
   ],
-  link: [{ rel: 'icon', type: 'image/png', href: '/logo.png' }],
+  link: [{ rel: 'icon', type: 'image/png', href: '/kvn-icon.png' }],
 });
 </script>
 <template>
   <div>
     <SectionsHomeHeroSection />
-    <SectionsHomeLatestPodcast />
-    <SectionsHomePopularPodcasts />
+    <SectionsHomeLatestNews />
+    <SectionsHomePopularEvents />
+    <SectionsHomeTeams />
     <SectionsAboutPodux />
     <SectionsWhyUs />
     <SectionsCallToAction />

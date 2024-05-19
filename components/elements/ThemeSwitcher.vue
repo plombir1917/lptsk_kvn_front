@@ -46,7 +46,7 @@ function changeTheme(event: MouseEvent) {
             <span>
               <ElementsIconsSystem />
             </span>
-            <span> System </span>
+            <span> Системная </span>
           </li>
 
           <li
@@ -56,7 +56,7 @@ function changeTheme(event: MouseEvent) {
             <span>
               <ElementsIconsLight />
             </span>
-            <span> Light </span>
+            <span> Светлая </span>
           </li>
 
           <li
@@ -66,7 +66,7 @@ function changeTheme(event: MouseEvent) {
             <span>
               <ElementsIconsDark />
             </span>
-            <span> Dark </span>
+            <span> Темная </span>
           </li>
         </ul>
       </div>
