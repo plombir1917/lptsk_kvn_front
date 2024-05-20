@@ -1,12 +1,16 @@
 <template>
-  <section class="pt-20 md:pt-24 relative">
+  <section class="pt-20 md:pt-24 relative" id="news">
     <AtomsContainer>
       <div class="flex justify-between items-center pb-6">
         <div class="">
           <AtomsTitle texte="Последние новости" />
         </div>
         <div class="flex items-center min-w-max relative">
-          <AtomsLinkBtn href="https://vk.com/hoodsovet" variant="primary">
+          <AtomsLinkBtn
+            href="https://vk.com/hoodsovet"
+            target="_blank"
+            variant="primary"
+          >
             Узнать больше
           </AtomsLinkBtn>
         </div>

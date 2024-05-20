@@ -1,5 +1,5 @@
 <template>
-  <section class="pt-16 relative">
+  <section class="pt-16 relative" id="events">
     <div
       aria-hidden="true"
       class="absolute inset-y-0 w-44 left-0 hidden dark:flex"
@@ -25,6 +25,7 @@
           <AtomsLinkBtn
             href="https://vk.com/video/@hoodsovet"
             variant="primary"
+            target="_blank"
           >
             Смотреть все
           </AtomsLinkBtn>
@@ -34,7 +35,7 @@
         class="grid grid-cols-2 items-stretch sm:grid-cols-3 lg:grid-cols-4 gap-x-3 gap-y-10 sm:gap-x-5 sm:gap-y-8"
       >
         <CardsPodCast
-          title="Start your journey in SEO"
+          title="Мероприятие кайфовое"
           href="#"
           duration="24min"
           cover-image="/images/podCast.webp"
@@ -44,33 +45,33 @@
         />
 
         <CardsPodCast
-          title="Start your journey in SEO"
+          title="Мероприятие кайфовое"
           href="#"
           duration="24min"
           cover-image="/images/podCast.webp"
           category=""
           created-at=""
-          description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae voluptates porro"
+          description="Lorem ipsum dolor sit amet,  voluptates porro"
         />
 
         <CardsPodCast
-          title="Start your journey in SEO"
+          title="Мероприятие кайфовое"
           href="#"
           duration="24min"
           cover-image="/images/podCast.webp"
           category=""
           created-at=""
-          description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae voluptates porro"
+          description="Lorem ipsum dolor sit amet,  voluptates porro"
         />
 
         <CardsPodCast
-          title="Start your journey in SEO"
+          title="Мероприятие кайфовое"
           href="#"
           duration="24min"
           cover-image="/images/podCast.webp"
           category=""
           created-at=""
-          description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae voluptates porro"
+          description="Lorem ipsum dolor sit amet,  voluptates porro"
         />
       </div>
     </AtomsContainer>

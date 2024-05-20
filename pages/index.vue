@@ -16,8 +16,8 @@ useHead({
     <SectionsHomeLatestNews />
     <SectionsHomePopularEvents />
     <SectionsHomeTeams />
-    <SectionsAboutPodux />
+    <SectionsStats />
     <SectionsWhyUs />
-    <SectionsCallToAction />
+    <SectionsJoin />
   </div>
 </template>

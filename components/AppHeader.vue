@@ -9,15 +9,15 @@ function toggleNav(event: MouseEvent): void {
 const navLinks = [
   {
     text: 'Новости',
-    href: '/',
+    href: '/#news',
   },
   {
     text: 'Мероприятия',
-    href: '/',
+    href: '/#events',
   },
   {
     text: 'Команды',
-    href: '/',
+    href: '/#teams',
   },
   {
     text: 'Билеты',
@@ -57,7 +57,7 @@ const navLinks = [
           <ElementsThemeSwitcher />
           <div class="hidden lg:flex lg:items-center gap-4">
             <AtomsLinkBtn href="#" variant="secondary"> Войти </AtomsLinkBtn>
-            <AtomsLinkBtn href="#" variant="primary">
+            <AtomsLinkBtn href="#join" variant="primary">
               Присоединиться
             </AtomsLinkBtn>
           </div>

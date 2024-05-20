@@ -1,5 +1,5 @@
 <template>
-  <section class="pt-16 relative">
+  <section class="pt-16 relative" id="teams">
     <div
       aria-hidden="true"
       class="absolute inset-y-0 w-44 left-0 hidden dark:flex"
@@ -29,9 +29,9 @@
         class="grid grid-cols-2 items-stretch sm:grid-cols-3 lg:grid-cols-4 gap-x-3 gap-y-10 sm:gap-x-5 sm:gap-y-8"
       >
         <CardsPodCast
-          title="Start your journey in SEO"
+          title="Команда крутая"
           href="#"
-          duration="24min"
+          duration=""
           cover-image="/images/podCast.webp"
           category=""
           created-at=""
@@ -39,39 +39,9 @@
         />
 
         <CardsPodCast
-          title="Start your journey in SEO"
+          title="Команда крутая"
           href="#"
-          duration="24min"
-          cover-image="/images/podCast.webp"
-          category=""
-          created-at=""
-          description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae voluptates porro"
-        />
-
-        <CardsPodCast
-          title="Start your journey in SEO"
-          href="#"
-          duration="24min"
-          cover-image="/images/podCast.webp"
-          category=""
-          created-at=""
-          description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae voluptates porro"
-        />
-
-        <CardsPodCast
-          title="Start your journey in SEO"
-          href="#"
-          duration="24min"
-          cover-image="/images/podCast.webp"
-          category=""
-          created-at=""
-          description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae voluptates porro"
-        />
-
-        <CardsPodCast
-          title="Start your journey in SEO"
-          href="#"
-          duration="24min"
+          duration=""
           cover-image="/images/podCast.webp"
           category=""
           created-at=""
@@ -79,33 +49,23 @@
         />
 
         <CardsPodCast
-          title="Start your journey in SEO"
+          title="Команда крутая"
           href="#"
-          duration="24min"
+          duration=""
           cover-image="/images/podCast.webp"
           category=""
           created-at=""
-          description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae voluptates porro"
+          description="Lorem ipsum dolor sit amet,  voluptates porro"
         />
 
         <CardsPodCast
-          title="Start your journey in SEO"
+          title="Команда крутая"
           href="#"
-          duration="24min"
+          duration=""
           cover-image="/images/podCast.webp"
           category=""
           created-at=""
-          description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae voluptates porro"
-        />
-
-        <CardsPodCast
-          title="Start your journey in SEO"
-          href="#"
-          duration="24min"
-          cover-image="/images/podCast.webp"
-          category=""
-          created-at=""
-          description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae voluptates porro"
+          description="Lorem ipsum dolor sit amet,  voluptates porro"
         />
       </div>
     </AtomsContainer>

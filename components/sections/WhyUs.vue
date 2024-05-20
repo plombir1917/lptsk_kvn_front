@@ -22,7 +22,7 @@
               <div
                 class="p-4 rounded-xl border border-box-border transition hover:bg-gray-200 dark:hover:bg-box-bg"
               >
-                <a href="https://vk.com/sapersaprykin"
+                <a href="https://vk.com/sapersaprykin" target="_blank"
                   ><h3
                     class="text-gray-700 dark:text-gray-200 font-semibold text-xl"
                   >
@@ -37,7 +37,7 @@
               <div
                 class="p-4 rounded-xl border border-box-border transition hover:bg-gray-200 dark:hover:bg-box-bg"
               >
-                <a href="https://vk.com/lipetskstandupband">
+                <a href="https://vk.com/lipetskstandupband" target="_blank">
                   <h3
                     class="text-gray-700 dark:text-gray-200 font-semibold text-xl"
                   >
@@ -52,7 +52,7 @@
               <div
                 class="p-4 rounded-xl border border-box-border transition hover:bg-gray-200 dark:hover:bg-box-bg"
               >
-                <a href="https://vk.com/id59127724">
+                <a href="https://vk.com/id59127724" target="_blank">
                   <h3
                     class="text-gray-700 dark:text-gray-200 font-semibold text-xl"
                   >
@@ -65,7 +65,7 @@
               </div>
             </div>
             <div class="pt-10 flex">
-              <AtomsLinkBtn href="#" variant="primary">
+              <AtomsLinkBtn href="#join" variant="primary">
                 Присоединиться
               </AtomsLinkBtn>
             </div>

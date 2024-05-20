@@ -77,7 +77,7 @@
               </div>
             </div>
             <div class="pt-10 flex">
-              <AtomsLinkBtn href="#" variant="primary">
+              <AtomsLinkBtn href="#join" variant="primary">
                 Присоединиться
               </AtomsLinkBtn>
             </div>

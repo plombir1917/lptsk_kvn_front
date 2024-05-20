@@ -10,7 +10,7 @@
         class="w-full h-32 sm:h-36 md:h-40 lg:h-48 rounded-xl object-cover"
       />
       <span
-        class="absolute top-2 right-2 px-2 rounded-full text-sm text-white bg-primary"
+        class="absolute top-2 right-2 px-2 rounded-full text-sm text-white bg-blue-500"
       >
         {{ duration }}
       </span>

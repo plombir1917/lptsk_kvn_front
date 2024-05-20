@@ -3,6 +3,7 @@
     <AtomsContainer>
       <div
         class="w-full relative py-8 md:py-10 px-6 md:px-8 rounded-2xl bg-gradient-to-tr from-gray-100 to-gray-200 dark:from-gray-900 dark:to-body-color"
+        id="join"
       >
         <div class="absolute right-0 top-0 h-full w-full flex justify-end">
           <span class="flex opacity-20">

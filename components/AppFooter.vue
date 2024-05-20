@@ -20,10 +20,10 @@
           </p>
         </div>
 
-        <BlocksFooterNavBlock title="Enterprise" :links="quickLinks" />
-        <BlocksFooterNavBlock title="Ressources" :links="ressourcesLinks" />
-        <BlocksFooterNavBlock title="Support" :links="supportLinks" />
-        <BlocksFooterNavBlock title="Enterprise" :links="quickLinks" />
+        <BlocksFooterNavBlock title="Работа" :links="quickLinks" />
+        <BlocksFooterNavBlock title="Ресурсы" :links="ressourcesLinks" />
+        <BlocksFooterNavBlock title="Поддержка" :links="supportLinks" />
+        <BlocksFooterNavBlock title="Подробнее" :links="quickLinks" />
       </div>
     </AtomsContainer>
     <div class="py-2 bg-gray-200 dark:bg-[rgb(10,16,29)]">
