@@ -11,24 +11,27 @@
             <li class="mt-3">
               <nuxt-link
                 to="/admin"
-                class="block px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800"
+                class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 hover:text-blue-500"
               >
+                <HomeIcon class="w-5 h-5 mr-2" />
                 Dashboard
               </nuxt-link>
             </li>
             <li class="mt-3">
               <nuxt-link
                 to="/admin/users"
-                class="block px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800"
+                class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 hover:text-blue-500"
               >
+                <UserGroupIcon class="w-5 h-5 mr-2" />
                 Users
               </nuxt-link>
             </li>
             <li class="mt-3">
               <nuxt-link
                 to="/admin/settings"
-                class="block px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 hover:text-blue-500 dark:hover:text-blue-500"
+                class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 hover:text-blue-500"
               >
+                <Cog6ToothIcon class="w-5 h-5 mr-2" />
                 Settings
               </nuxt-link>
             </li>
@@ -46,7 +49,7 @@
               Admin Panel
             </h1>
           </div>
-          <div class="flex items-center">
+          <div class="flex items-center space-x-4">
             <ElementsThemeSwitcher />
             <button
               class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
@@ -62,13 +65,21 @@
       <main
         class="flex-1 overflow-x-hidden overflow-y-auto bg-body dark:bg-gray-900"
       >
-        <div class="container mx-auto px-6 py-8"><slot /></div>
+        <div class="container mx-auto px-6 py-8">
+          <slot />
+        </div>
       </main>
     </div>
   </div>
 </template>
 
 <script setup>
+import {
+  HomeIcon,
+  UserGroupIcon,
+  Cog6ToothIcon,
+} from '@heroicons/vue/24/outline';
+
 // Функция для выхода
 function logout() {
   // Здесь добавьте свою логику выхода
