@@ -1,9 +1,18 @@
 <script lang="ts" setup>
 const navIsOpen = useState('navIsOpen', () => false);
+const loginModalOpen = ref(false);
 
 function toggleNav(event: MouseEvent): void {
   event.preventDefault();
   navIsOpen.value = !navIsOpen.value;
+}
+
+function openLoginModal() {
+  loginModalOpen.value = true;
+}
+
+function closeLoginModal() {
+  loginModalOpen.value = false;
 }
 
 const navLinks = [
@@ -56,7 +65,9 @@ const navLinks = [
         <div class="flex items-center bg-inherit gap-1 lg:gap-3 min-w-max">
           <ElementsThemeSwitcher />
           <div class="hidden lg:flex lg:items-center gap-4">
-            <AtomsLinkBtn href="#" variant="secondary"> Войти </AtomsLinkBtn>
+            <AtomsLinkBtn href="/" variant="secondary" @click="openLoginModal">
+              Войти
+            </AtomsLinkBtn>
             <AtomsLinkBtn href="#join" variant="primary">
               Присоединиться
             </AtomsLinkBtn>
@@ -132,5 +143,6 @@ const navLinks = [
         </div>
       </nav>
     </AtomsContainer>
+    <AuthLoginModal :isOpen="loginModalOpen" :closeModal="closeLoginModal" />>
   </header>
 </template>

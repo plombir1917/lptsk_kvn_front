@@ -54,9 +54,13 @@
               href="#"
               variant="primary"
               class="w-full sm:w-max flex justify-center"
+              @click="openTicketModal"
+              >Купить билет</AtomsLinkBtn
             >
-              Купить билет
-            </AtomsLinkBtn>
+            <TicketModal
+              :isOpen="ticketModalOpen"
+              :closeModal="closeTicketModal"
+            />
             <AtomsModal />
           </div>
           <div class="pt-8 lg:pt-10 w-max mx-auto lg:mx-0">
@@ -113,3 +117,18 @@
     </AtomsContainer>
   </section>
 </template>
+
+<script lang="ts" setup>
+import { ref } from 'vue';
+import TicketModal from '~/components/elements/TicketModal.vue';
+
+const ticketModalOpen = ref(false);
+
+function openTicketModal() {
+  ticketModalOpen.value = true;
+}
+
+function closeTicketModal() {
+  ticketModalOpen.value = false;
+}
+</script>
