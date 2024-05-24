@@ -1,10 +1,10 @@
 <template>
   <div>
     <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">
-      Аккаунты
+      Мероприятия
     </h1>
     <p class="mt-4 text-gray-600 dark:text-gray-300">
-      Управляйте аккаунтами здесь.
+      Управляйте мероприятиями здесь.
     </p>
     <div class="mt-6 overflow-x-auto">
       <table class="min-w-full bg-white dark:bg-gray-800">
@@ -13,42 +13,62 @@
             <th
               class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
             >
-              Имя
+              Название
             </th>
             <th
               class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
             >
-              Телефон
+              Дата
             </th>
             <th
               class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
             >
-              Логин
+              Место
             </th>
             <th
               class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
             >
-              Роль
+              Описание
+            </th>
+            <th
+              class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
+            >
+              Фото
+            </th>
+            <th
+              class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
+            >
+              Ссылка
             </th>
           </tr>
         </thead>
         <tbody>
           <tr
-            v-for="user in users"
-            :key="user.id"
+            v-for="event in events"
+            :key="event.id"
             class="bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
           >
             <td class="py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-              {{ user.name }}
+              {{ event.title }}
             </td>
             <td class="py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-              {{ user.phone }}
+              {{ event.date }}
             </td>
             <td class="py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-              {{ user.login }}
+              {{ event.location }}
             </td>
             <td class="py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-              {{ user.role }}
+              {{ event.description }}
+            </td>
+            <td class="py-4 px-6 border-b border-gray-200 dark:border-gray-700">
+              <img
+                :src="event.photo"
+                alt="Event Photo"
+                class="h-16 w-16 object-cover rounded-md"
+              />
+            </td>
+            <td class="py-4 px-6 border-b border-gray-200 dark:border-gray-700">
+              {{ event.url }}
             </td>
           </tr>
         </tbody>
@@ -61,18 +81,18 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
-const users = ref([]);
+const events = ref([]);
 
-const fetchUsers = async () => {
+const fetchEvents = async () => {
   try {
-    // const response = await axios.get('/api/users'); // URL вашего API
-    users.value = response.data;
+    // const response = await axios.get('/api/events'); // URL вашего API
+    events.value = response.data;
   } catch (error) {
-    console.error('Error fetching users:', error);
+    console.error('Error fetching events:', error);
   }
 };
 
-onMounted(fetchUsers);
+onMounted(fetchEvents);
 
 definePageMeta({
   layout: 'admin',

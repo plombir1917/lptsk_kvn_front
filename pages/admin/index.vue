@@ -2,52 +2,44 @@
 definePageMeta({
   layout: 'admin',
 });
-useHead({
-  title: 'Липецкий КВН',
-  meta: [
-    {
-      name: 'description',
-      content: 'Сайт Липецкой официальной лиги МС КВН "Университетская"',
-    },
-  ],
-  link: [{ rel: 'icon', type: 'image/png', href: '/kvn-icon.png' }],
-});
 </script>
 <template>
   <div>
     <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">
-      Dashboard
+      Главная
     </h1>
     <p class="mt-4 text-gray-600 dark:text-gray-300">
-      Welcome to the admin panel. Use the sidebar to navigate through the
-      different sections.
+      Добро пожаловать в панель администрирования. Используйте боковое меню для
+      навигации по разным разделам.
     </p>
     <div class="mt-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
       <div
         class="bg-box-bg dark:bg-gray-800 p-6 rounded-lg shadow-md hover:bg-blue-100 dark:hover:bg-blue-800"
       >
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
-          Statistics
+          Статистика
         </h2>
         <p class="mt-4 text-gray-600 dark:text-gray-300">
-          Some interesting stats.
+          Некоторая интересная статистика.
         </p>
       </div>
       <div
         class="bg-box-bg dark:bg-gray-800 p-6 rounded-lg shadow-md hover:bg-blue-100 dark:hover:bg-blue-800"
       >
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
-          Reports
+          Отчеты
         </h2>
-        <p class="mt-4 text-gray-600 dark:text-gray-300">Monthly reports.</p>
+        <p class="mt-4 text-gray-600 dark:text-gray-300">Месячные отчеты.</p>
       </div>
       <div
         class="bg-box-bg dark:bg-gray-800 p-6 rounded-lg shadow-md hover:bg-blue-100 dark:hover:bg-blue-800"
       >
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
-          Notifications
+          Уведомления
         </h2>
-        <p class="mt-4 text-gray-600 dark:text-gray-300">Recent activities.</p>
+        <p class="mt-4 text-gray-600 dark:text-gray-300">
+          Последние активности.
+        </p>
       </div>
     </div>
   </div>
