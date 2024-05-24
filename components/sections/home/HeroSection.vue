@@ -35,6 +35,7 @@
                 class="text-transparent bg-clip-text bg-gradient-to-br from-primary to-[#4285f4]"
                 >КВН</span
               >
+              <br />
               в ЛГТУ
             </h1>
           </div>
@@ -42,9 +43,9 @@
           <p
             class="text-gray-600 dark:text-gray-300 pt-8 text-center lg:text-left mx-auto max-w-xl"
           >
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum,
-            beatae omnis ipsa magnam neque ut nam nesciunt esse fugit
-            praesentium hic magni possimus illo consequatur.
+            Липецкая официальная «Университетская» лига Международного Союза
+            КВН. Информационный партнер дружественных проектов в сфере
+            студенческого и молодежного творчества Липецкой области.
           </p>
 
           <div
