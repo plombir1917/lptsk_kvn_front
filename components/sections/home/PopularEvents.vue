@@ -35,40 +35,44 @@
         class="grid grid-cols-2 items-stretch sm:grid-cols-3 lg:grid-cols-4 gap-x-3 gap-y-10 sm:gap-x-5 sm:gap-y-8"
       >
         <CardsPodCast
+          :button="true"
           title="Мероприятие кайфовое"
           href="#"
           duration="24min"
-          cover-image="/images/podCast.webp"
+          cover-image="/kvn-logo-no-bg.png"
           category=""
           created-at=""
           description="Lorem ipsum dolor sit amet,  voluptates porro"
         />
 
         <CardsPodCast
+          :button="true"
           title="Мероприятие кайфовое"
           href="#"
           duration="24min"
-          cover-image="/images/podCast.webp"
+          cover-image="/kvn-logo-no-bg.png"
           category=""
           created-at=""
           description="Lorem ipsum dolor sit amet,  voluptates porro"
         />
 
         <CardsPodCast
+          :button="true"
           title="Мероприятие кайфовое"
           href="#"
           duration="24min"
-          cover-image="/images/podCast.webp"
+          cover-image="/kvn-logo-no-bg.png"
           category=""
           created-at=""
           description="Lorem ipsum dolor sit amet,  voluptates porro"
         />
 
         <CardsPodCast
+          :button="true"
           title="Мероприятие кайфовое"
           href="#"
           duration="24min"
-          cover-image="/images/podCast.webp"
+          cover-image="/kvn-logo-no-bg.png"
           category=""
           created-at=""
           description="Lorem ipsum dolor sit amet,  voluptates porro"

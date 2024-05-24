@@ -79,13 +79,13 @@
             class="w-full h-[27rem] sm:h-[30rem] md:h-full flex justify-start md:justify-end relative pb-5"
           >
             <img
-              src="/images/podCast.webp"
+              src="/images/nikita.webp"
               alt="Podcast image"
               width="300"
               class="w-2/5 aspect-square absolute bottom-0 right-0 md:left-0 object-cover rounded-t-[30%] rounded-b-[30%] border-4 border-box-border shadow-md shadow-box-shadow"
             />
             <img
-              src="/images/saper.jpeg"
+              src="/images/saper.jpg"
               alt="Illustratuin about"
               width="500"
               class="w-11/12 lg:w-5/6 h-full object-cover rounded-t-[10rem] rounded-b-[10rem] md:rounded-t-[11rem] md:rounded-b-[11rem] lg:rounded-t-[14rem] lg:rounded-b-[14rem]"

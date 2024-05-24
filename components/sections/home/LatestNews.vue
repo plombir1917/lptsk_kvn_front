@@ -45,8 +45,8 @@
           >
             <CardsRecentPod
               title="Результаты фестиваля открытия сезона 2024"
-              duration="23min"
-              href="#"
+              duration=""
+              href="https://vk.com/wall-56052247_13665"
               cover-image="/images/festival24.jpg"
             />
           </div>
@@ -56,8 +56,8 @@
           >
             <CardsRecentPod
               title="РОДИТЬСЯ В МАЕ - ВОТ ОНО ВЕЗЕНИЕ!"
-              duration="1h:22min"
-              href="#"
+              duration=""
+              href="https://vk.com/wall-56052247_13686"
               cover-image="/images/jeka.jpg"
             />
           </div>
@@ -67,8 +67,8 @@
           >
             <CardsRecentPod
               title="Обсуждение Студеческой весны 2024. Мы начинаем!"
-              duration="12min"
-              href="#"
+              duration=""
+              href="https://vk.com/wall-56052247_13634"
               cover-image="/images/studvesna.jpg"
             />
           </div>
@@ -78,8 +78,8 @@
           >
             <CardsRecentPod
               title="Билеты на фестиваль!"
-              duration="50min"
-              href="#"
+              duration=""
+              href="https://vk.com/wall-56052247_13629"
               cover-image="/images/tickets.jpg"
             />
           </div>
