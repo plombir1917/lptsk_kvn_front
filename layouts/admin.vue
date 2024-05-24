@@ -3,9 +3,7 @@
     <!-- Sidebar -->
     <aside class="w-64 bg-box-bg dark:bg-gray-800 shadow-lg">
       <div class="px-4 py-6">
-        <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">
-          Admin
-        </h2>
+        <img src="/kvn-logo-no-bg.png" alt="КВН Иконка" class="h-12 w-12" />
         <nav class="mt-6">
           <ul>
             <li class="mt-3">
@@ -14,7 +12,7 @@
                 class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 hover:text-blue-500"
               >
                 <HomeIcon class="w-5 h-5 mr-2" />
-                Dashboard
+                Главная
               </nuxt-link>
             </li>
             <li class="mt-3">
@@ -23,7 +21,16 @@
                 class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 hover:text-blue-500"
               >
                 <UserGroupIcon class="w-5 h-5 mr-2" />
-                Users
+                Аккаунты
+              </nuxt-link>
+            </li>
+            <li class="mt-3">
+              <nuxt-link
+                to="/admin/events"
+                class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 hover:text-blue-500"
+              >
+                <CalendarIcon class="w-5 h-5 mr-2" />
+                Мероприятия
               </nuxt-link>
             </li>
             <li class="mt-3">
@@ -32,7 +39,7 @@
                 class="flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 hover:text-blue-500"
               >
                 <Cog6ToothIcon class="w-5 h-5 mr-2" />
-                Settings
+                Настройки
               </nuxt-link>
             </li>
           </ul>
@@ -46,11 +53,17 @@
         <div class="flex items-center justify-between px-6 py-4">
           <div class="flex items-center">
             <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">
-              Admin Panel
+              Администрирование
             </h1>
           </div>
           <div class="flex items-center space-x-4">
             <ElementsThemeSwitcher />
+            <nuxt-link
+              to="/admin/profile"
+              class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            >
+              Профиль
+            </nuxt-link>
             <button
               class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
               @click="logout"
@@ -74,15 +87,31 @@
 </template>
 
 <script setup>
+definePageMeta({
+  layout: 'admin',
+});
+useHead({
+  title: 'Липецкий КВН',
+  meta: [
+    {
+      name: 'description',
+      content: 'Сайт Липецкой официальной лиги МС КВН "Университетская"',
+    },
+  ],
+  link: [{ rel: 'icon', type: 'image/png', href: '/kvn-icon.png' }],
+});
 import {
   HomeIcon,
   UserGroupIcon,
   Cog6ToothIcon,
+  CalendarIcon,
 } from '@heroicons/vue/24/outline';
+
+const router = useRouter();
 
 // Функция для выхода
 function logout() {
   // Здесь добавьте свою логику выхода
-  console.log('Logout clicked');
+  router.push('/');
 }
 </script>
