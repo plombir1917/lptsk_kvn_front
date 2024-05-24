@@ -15,6 +15,7 @@
       <div class="pt-2">
         <NuxtLink
           :to="href"
+          target="_blank"
           class="flex items-center text-white rounded-full p-0.5 pr-2 gap-2 text-sm border border-gray-100/20 w-max"
         >
           <span class="p-1 rounded-full bg-blue-500">
