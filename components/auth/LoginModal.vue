@@ -10,6 +10,13 @@
         >
           Войти
         </h2>
+        <div class="px-4 py-6 flex justify-center">
+          <img
+            src="/kvn-logo-no-bg.png"
+            alt="КВН Иконка"
+            class="h-30 w-30 md:h-30 md:w-30 lg:h-30 lg:w-30"
+          />
+        </div>
         <form @submit.prevent="login">
           <div class="mb-4">
             <label class="block text-gray-700 dark:text-gray-300 mb-2"
