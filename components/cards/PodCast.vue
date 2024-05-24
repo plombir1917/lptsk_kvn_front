@@ -25,7 +25,7 @@
           {{ title }}
         </h2>
       </div>
-      <div class="pt-3 sm:pt-5 min-h-max h-max">
+      <div class="pt-3 sm:pt-5 min-h-max h-max" v-if="button">
         <NuxtLink
           :to="href"
           class="flex relative group items-center text-white px-5 py-2 bg-blue-500 gap-1 text-sm w-max rounded-full"
@@ -57,14 +57,23 @@
   </div>
 </template>
 <script lang="ts" setup>
-const { title, href, duration, coverImage, category, createdAt, description } =
-  defineProps<{
-    title: string;
-    href: string;
-    duration: string;
-    coverImage: string;
-    category: string;
-    createdAt: string;
-    description: string;
-  }>();
+const {
+  title,
+  href,
+  duration,
+  coverImage,
+  category,
+  createdAt,
+  description,
+  button,
+} = defineProps<{
+  button: boolean;
+  title: string;
+  href: string;
+  duration: string;
+  coverImage: string;
+  category: string;
+  createdAt: string;
+  description: string;
+}>();
 </script>
