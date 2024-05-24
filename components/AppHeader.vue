@@ -143,6 +143,6 @@ const navLinks = [
         </div>
       </nav>
     </AtomsContainer>
-    <AuthLoginModal :isOpen="loginModalOpen" :closeModal="closeLoginModal" />>
+    <AuthLoginModal :isOpen="loginModalOpen" :closeModal="closeLoginModal" />
   </header>
 </template>
