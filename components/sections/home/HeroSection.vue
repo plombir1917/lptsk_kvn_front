@@ -52,7 +52,7 @@
             class="flex items-center gap-3 pt-9 flex-col sm:flex-row sm:w-max sm:mx-auto lg:mx-0"
           >
             <AtomsLinkBtn
-              href="#"
+              href="/"
               variant="primary"
               class="w-full sm:w-max flex justify-center"
               @click="openTicketModal"
@@ -133,3 +133,14 @@ function closeTicketModal() {
   ticketModalOpen.value = false;
 }
 </script>
+
+<style>
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Отображать скролл только внутри модального окна */
+.modal-content {
+  overflow-y: auto;
+}
+</style>
