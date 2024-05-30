@@ -20,7 +20,7 @@ function closeModal() {
   <transition name="modal">
     <div>
       <AtomsLinkBtn
-        href="#"
+        href="/"
         @click="openModal"
         variant="costum"
         costum-span-class="px-6 md:px-7 hover:bg-primary/10"
