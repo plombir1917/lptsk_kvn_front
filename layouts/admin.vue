@@ -108,10 +108,9 @@ import {
 } from '@heroicons/vue/24/outline';
 
 const router = useRouter();
-
 // Функция для выхода
 function logout() {
-  // Здесь добавьте свою логику выхода
-  router.push('/');
+  localStorage.removeItem('access_token'); // Remove token from localStorage
+  router.push('/'); // Redirect to login page
 }
 </script>

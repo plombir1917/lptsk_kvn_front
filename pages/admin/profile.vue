@@ -77,29 +77,79 @@
 definePageMeta({
   layout: 'admin',
 });
-import { ref } from 'vue';
-import {
-  HomeIcon,
-  UserGroupIcon,
-  Cog6ToothIcon,
-} from '@heroicons/vue/24/outline';
 
-// Профильные данные пользователя
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
 const profile = ref({
-  firstName: 'Иван',
-  lastName: 'Иванов',
-  email: 'ivanov@example.com',
+  firstName: '',
+  lastName: '',
+  email: '',
 });
 
-// Функция для обновления профиля
+const token = localStorage.getItem('access_token');
+
+async function fetchProfile() {
+  const query = `
+    query {
+      getAccountByToken {
+        name
+        surname
+        phone
+        login
+        role
+        photo
+      }
+    }
+  `;
+
+  try {
+    const response = await fetch('http://localhost:3001/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ query }),
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.data && result.data.getAccountByToken) {
+      const account = result.data.getAccountByToken;
+      profile.value.firstName = account.name;
+      profile.value.lastName = account.surname;
+      profile.value.email = account.login;
+      console.log('Профиль получен:', profile.value);
+    } else {
+      console.error('Fetching profile failed:', result.errors);
+      alert('Fetching profile failed. Please try again.');
+    }
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+    alert('An error occurred. Please try again.');
+  }
+}
+
 function updateProfile() {
   console.log('Профиль обновлен:', profile.value);
   // Здесь добавьте свою логику обновления профиля
 }
 
-// Функция для выхода
-function logout() {
-  console.log('Logout clicked');
-  // Здесь добавьте свою логику выхода
-}
+onMounted(() => {
+  fetchProfile();
+});
 </script>
+
+<style scoped>
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s;
+}
+.modal-enter,
+.modal-leave-to /* .modal-leave-active in <2.1.8 */ {
+  opacity: 0;
+}
+</style>
