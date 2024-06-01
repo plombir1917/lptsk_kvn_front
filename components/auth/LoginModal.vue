@@ -63,22 +63,71 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
 const props = defineProps<{
   isOpen: boolean;
   closeModal: () => void;
 }>();
+
 const email = ref('');
 const password = ref('');
 
 const router = useRouter();
 
-function login() {
-  // Логика для авторизации
-  console.log('Email:', email.value);
-  console.log('Password:', password.value);
-  // Редирект на страницу /admin после успешного логина
-  props.closeModal();
-  router.push('/admin');
+async function login() {
+  const query = `
+    mutation {
+      login(input: {login: "${email.value}", password: "${password.value}"}) {
+        access_token
+      }
+    }
+  `;
+
+  try {
+    const response = await fetch('http://localhost:3001/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query }),
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.data && result.data.login) {
+      const accessToken = result.data.login.access_token;
+      console.log('Access Token:', accessToken);
+
+      // Сохраняем токен в localStorage
+      localStorage.setItem('access_token', accessToken);
+
+      // Редирект на страницу /admin после успешного логина
+      props.closeModal();
+      router.push('/admin');
+    } else {
+      console.error('Login failed:', result.errors);
+      alert('Login failed. Please check your credentials and try again.');
+    }
+  } catch (error) {
+    console.error('Error during login:', error);
+    alert('An error occurred. Please try again.');
+  }
+}
+
+// Пример функции для выполнения авторизованного запроса
+async function fetchWithAuth(query: string) {
+  const token = localStorage.getItem('access_token');
+  const response = await fetch('http://localhost:3001/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ query }),
+  });
+
+  return response.json();
 }
 </script>
 
