@@ -76,6 +76,7 @@
 <script setup>
 definePageMeta({
   layout: 'admin',
+  middleware: 'auth',
 });
 
 import { ref, onMounted } from 'vue';
@@ -88,8 +89,6 @@ const profile = ref({
   lastName: '',
   email: '',
 });
-
-const token = localStorage.getItem('access_token');
 
 async function fetchProfile() {
   const query = `
@@ -106,6 +105,7 @@ async function fetchProfile() {
   `;
 
   try {
+    const token = localStorage.getItem('access_token');
     const response = await fetch('http://localhost:3001/graphql', {
       method: 'POST',
       headers: {
@@ -122,19 +122,15 @@ async function fetchProfile() {
       profile.value.firstName = account.name;
       profile.value.lastName = account.surname;
       profile.value.email = account.login;
-      console.log('Профиль получен:', profile.value);
     } else {
-      console.error('Fetching profile failed:', result.errors);
       alert('Fetching profile failed. Please try again.');
     }
   } catch (error) {
-    console.error('Error fetching profile:', error);
     alert('An error occurred. Please try again.');
   }
 }
 
 function updateProfile() {
-  console.log('Профиль обновлен:', profile.value);
   // Здесь добавьте свою логику обновления профиля
 }
 
