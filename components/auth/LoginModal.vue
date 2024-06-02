@@ -97,7 +97,6 @@ async function login() {
 
     if (response.ok && result.data && result.data.login) {
       const accessToken = result.data.login.access_token;
-      console.log('Access Token:', accessToken);
 
       // Сохраняем токен в localStorage
       localStorage.setItem('access_token', accessToken);
@@ -106,12 +105,10 @@ async function login() {
       props.closeModal();
       router.push('/admin');
     } else {
-      console.error('Login failed:', result.errors);
       alert('Login failed. Please check your credentials and try again.');
     }
   } catch (error) {
-    console.error('Error during login:', error);
-    alert('An error occurred. Please try again.');
+    alert('An error occurred( Please? try again.');
   }
 }
 
