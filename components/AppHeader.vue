@@ -100,13 +100,14 @@ const navLinks = [
                   <li
                     class="flex select-none cursor-pointer items-center gap-3 px-2 py-2 rounded-md transition hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-200"
                   >
-                    <NuxtLink to="#"> Присоединиться </NuxtLink>
+                    <NuxtLink to="#join"> Присоединиться </NuxtLink>
                   </li>
 
                   <li
+                    @click="openLoginModal"
                     class="flex select-none cursor-pointer items-center gap-3 px-2 py-2 rounded-md transition hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-200"
                   >
-                    <NuxtLink to="#"> Войти </NuxtLink>
+                    <NuxtLink to=""> Войти </NuxtLink>
                   </li>
                 </ul>
               </template>
