@@ -14,7 +14,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
   } catch {
     throw createError({
       statusCode: 401,
-      statusMessage: 'Unauthorized. Please log in to access this page.',
+      statusMessage:
+        'Не авторизован. Пожалуйста, войдите, чтобы получить доступ к этой странице.',
     });
   }
 });
