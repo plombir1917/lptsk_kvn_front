@@ -1,4 +1,5 @@
 <template>
+  <ElementsLoadingPage v-if="isLoading" />
   <div class="flex h-screen bg-body dark:bg-gray-900">
     <!-- Sidebar -->
     <aside class="w-64 bg-box-bg dark:bg-gray-800 shadow-lg">
@@ -114,6 +115,10 @@ import {
   CalendarIcon,
 } from '@heroicons/vue/24/outline';
 import { useRouter, useRoute } from 'vue-router';
+
+import { useState } from '#imports';
+
+const isLoading = useState('isLoading', () => true);
 
 const router = useRouter();
 const route = useRoute();
