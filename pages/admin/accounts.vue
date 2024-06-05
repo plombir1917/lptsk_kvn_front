@@ -15,41 +15,41 @@
       </button>
     </div>
     <div class="mt-6 overflow-x-auto">
-      <table class="min-w-full bg-white dark:bg-gray-800">
+      <table class="min-w-full bg-white dark:bg-gray-800 overflow-x-auto">
         <thead>
           <tr>
             <th
-              class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
+              class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-center text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
             >
               Фото
             </th>
             <th
-              class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
+              class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-center text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
             >
               Имя
             </th>
             <th
-              class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
+              class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-center text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
             >
               Фамилия
             </th>
             <th
-              class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
+              class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-center text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
             >
               Телефон
             </th>
             <th
-              class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
+              class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-center text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
             >
               Логин
             </th>
             <th
-              class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
+              class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-center text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
             >
               Роль
             </th>
             <th
-              class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
+              class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-center text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
             >
               Действия
             </th>
@@ -61,21 +61,25 @@
             :key="account.id"
             class="bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300"
           >
-            <td class="py-4 px-6 border-b border-gray-200 dark:border-gray-700">
+            <td
+              class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
+            >
               <img
                 :src="account.photo"
                 alt="Фото"
-                class="w-10 h-10 rounded-full"
+                class="w-20 h-20 rounded-full mx-auto"
               />
               <button
                 v-if="account.isEditing"
                 @click="openPhotoModal(account)"
-                class="mt-2 px-3 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700"
+                class="mt-1 px-1 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700"
               >
                 Изменить фото
               </button>
             </td>
-            <td class="py-4 px-6 border-b border-gray-200 dark:border-gray-700">
+            <td
+              class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
+            >
               <input
                 v-if="account.isEditing"
                 v-model="account.name"
@@ -83,7 +87,9 @@
               />
               <span v-else>{{ account.name }}</span>
             </td>
-            <td class="py-4 px-6 border-b border-gray-200 dark:border-gray-700">
+            <td
+              class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
+            >
               <input
                 v-if="account.isEditing"
                 v-model="account.surname"
@@ -91,7 +97,9 @@
               />
               <span v-else>{{ account.surname }}</span>
             </td>
-            <td class="py-4 px-6 border-b border-gray-200 dark:border-gray-700">
+            <td
+              class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
+            >
               <input
                 v-if="account.isEditing"
                 v-model="account.phone"
@@ -99,7 +107,9 @@
               />
               <span v-else>{{ account.phone }}</span>
             </td>
-            <td class="py-4 px-6 border-b border-gray-200 dark:border-gray-700">
+            <td
+              class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
+            >
               <input
                 v-if="account.isEditing"
                 v-model="account.login"
@@ -107,16 +117,22 @@
               />
               <span v-else>{{ account.login }}</span>
             </td>
-            <td class="py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-              <input
+            <td
+              class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
+            >
+              <select
                 v-if="account.isEditing"
                 v-model="account.role"
-                class="w-full p-2 border rounded"
-              />
+                class="block w-full p-2 border rounded appearance-none"
+              >
+                <option value="EDITOR">Редактор</option>
+                <option value="ADMIN">Администратор</option>
+                <option value="DIRECTOR">Директор</option>
+              </select>
               <span v-else>{{ account.role }}</span>
             </td>
             <td
-              class="py-4 px-6 border-b border-gray-200 dark:border-gray-700 space-x-2"
+              class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
             >
               <button
                 v-if="account.isEditing"
@@ -288,7 +304,6 @@ async function saveAccount(account) {
         phone
         login
         role
-        photo
       }
     }
   `;
@@ -299,7 +314,6 @@ async function saveAccount(account) {
       phone: account.phone,
       login: account.login,
       role: account.role,
-      photo: account.photo,
     },
   };
 
@@ -317,12 +331,13 @@ async function saveAccount(account) {
     const result = await response.json();
     if (response.ok && result.data && result.data.updateAccount) {
       account.isEditing = false;
+      alert('Изменения успешно сохранены.');
     } else {
       console.error('Обновление аккаунта не удалось:', result.errors);
       alert('Обновление аккаунта не удалось. Пожалуйста попробуйте снова.');
     }
   } catch (error) {
-    console.error('Ошибка обновления аккаунта:', error);
+    alert('Ошибка обновления аккаунта:', error);
   }
 }
 
@@ -364,7 +379,6 @@ async function savePhoto(formData) {
     formData.append('map', JSON.stringify(map));
     formData.append('0', file, file.name);
 
-    console.log(formData);
     const response = await fetch('http://localhost:3001/graphql', {
       method: 'POST',
       headers: {
@@ -385,10 +399,10 @@ async function savePhoto(formData) {
     if (result.errors) {
       console.error('GraphQL errors:', result.errors);
     } else {
-      console.log('Account updated successfully:', result.data.updateAccount);
+      alert('Фото успешно изменено.');
     }
   } catch (error) {
-    console.error('Error updating account:', error);
+    alert('Error updating account:', error);
   }
   closePhotoModal();
 }
