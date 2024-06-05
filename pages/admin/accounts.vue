@@ -67,33 +67,81 @@
                 alt="Фото"
                 class="w-10 h-10 rounded-full"
               />
+              <button
+                v-if="account.isEditing"
+                @click="openPhotoModal(account)"
+                class="mt-2 px-3 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700"
+              >
+                Изменить фото
+              </button>
             </td>
             <td class="py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-              {{ account.name }}
+              <input
+                v-if="account.isEditing"
+                v-model="account.name"
+                class="w-full p-2 border rounded"
+              />
+              <span v-else>{{ account.name }}</span>
             </td>
             <td class="py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-              {{ account.surname }}
+              <input
+                v-if="account.isEditing"
+                v-model="account.surname"
+                class="w-full p-2 border rounded"
+              />
+              <span v-else>{{ account.surname }}</span>
             </td>
             <td class="py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-              {{ account.phone }}
+              <input
+                v-if="account.isEditing"
+                v-model="account.phone"
+                class="w-full p-2 border rounded"
+              />
+              <span v-else>{{ account.phone }}</span>
             </td>
             <td class="py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-              {{ account.login }}
+              <input
+                v-if="account.isEditing"
+                v-model="account.login"
+                class="w-full p-2 border rounded"
+              />
+              <span v-else>{{ account.login }}</span>
             </td>
             <td class="py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-              {{ account.role }}
+              <input
+                v-if="account.isEditing"
+                v-model="account.role"
+                class="w-full p-2 border rounded"
+              />
+              <span v-else>{{ account.role }}</span>
             </td>
             <td
               class="py-4 px-6 border-b border-gray-200 dark:border-gray-700 space-x-2"
             >
-              <NuxtLink
-                :to="`/admin/accounts/edit/${account.id}`"
-                class="px-3 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700"
-                >Редактировать</NuxtLink
+              <button
+                v-if="account.isEditing"
+                @click="saveAccount(account)"
+                class="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700"
               >
+                Сохранить
+              </button>
+              <button
+                v-if="account.isEditing"
+                @click="cancelEdit(account)"
+                class="px-3 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700"
+              >
+                Отмена
+              </button>
+              <button
+                v-else
+                @click="editAccount(account)"
+                class="px-3 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700"
+              >
+                Редактировать
+              </button>
               <button
                 @click="deleteAccount(account.id)"
-                class="px-3 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700"
+                class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
               >
                 Удалить
               </button>
@@ -111,15 +159,27 @@
       @close="closeModal"
       @submit="handleModalSubmit"
     />
+
+    <div
+      v-if="isPhotoModalOpen"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+    >
+      <div class="bg-white rounded-lg shadow-lg p-6 w-1/2">
+        <ImageUpload @save="savePhoto" @close="closePhotoModal" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import CreateModal from '@/components/elements/CreateModal.vue';
+import ImageUpload from '@/components/elements/ImageUpload.vue';
 
 const accounts = ref([]);
 const isModalOpen = ref(false);
+const isPhotoModalOpen = ref(false);
+const currentAccount = ref(null);
 const modalTitle = ref('');
 const modalFields = ref([]);
 const modalInitialData = ref({});
@@ -161,7 +221,10 @@ async function fetchAccounts() {
 
     const result = await response.json();
     if (response.ok && result.data && result.data.getAccounts) {
-      accounts.value = result.data.getAccounts;
+      accounts.value = result.data.getAccounts.map((account) => ({
+        ...account,
+        isEditing: false,
+      }));
     } else {
       console.error('При получении аккаунтов произошла ошибка:', result.errors);
       alert(
@@ -203,6 +266,131 @@ async function deleteAccount(id) {
   } catch (error) {
     console.error('Ошибка удаления аккаунта:', error);
   }
+}
+
+function editAccount(account) {
+  account.isEditing = true;
+}
+
+function cancelEdit(account) {
+  account.isEditing = false;
+  fetchAccounts();
+}
+
+async function saveAccount(account) {
+  console.log(444);
+  const mutation = `
+    mutation($input: UpdateAccountInput!) {
+      updateAccount(id: "${account.id}", input: $input) {
+        id
+        name
+        surname
+        phone
+        login
+        role
+        photo
+      }
+    }
+  `;
+  const variables = {
+    input: {
+      name: account.name,
+      surname: account.surname,
+      phone: account.phone,
+      login: account.login,
+      role: account.role,
+      photo: account.photo,
+    },
+  };
+
+  try {
+    const token = localStorage.getItem('access_token');
+    const response = await fetch('http://localhost:3001/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ query: mutation, variables }),
+    });
+
+    const result = await response.json();
+    if (response.ok && result.data && result.data.updateAccount) {
+      account.isEditing = false;
+    } else {
+      console.error('Обновление аккаунта не удалось:', result.errors);
+      alert('Обновление аккаунта не удалось. Пожалуйста попробуйте снова.');
+    }
+  } catch (error) {
+    console.error('Ошибка обновления аккаунта:', error);
+  }
+}
+
+function openPhotoModal(account) {
+  currentAccount.value = account;
+  isPhotoModalOpen.value = true;
+}
+
+function closePhotoModal() {
+  isPhotoModalOpen.value = false;
+  currentAccount.value = null;
+}
+
+async function savePhoto(formData) {
+  const file = formData.get('photo');
+  try {
+    const token = localStorage.getItem('access_token');
+    const operations = {
+      query: `
+        mutation($photo: Upload!, $id: String!) {
+          updateAccount(id: $id, input: { photo: $photo }) {
+            id
+            login
+            photo
+          }
+        }
+      `,
+      variables: {
+        id: currentAccount.value.id,
+        photo: null, // Это значение будет заменено на файл в мультипарт запросе
+      },
+    };
+    const map = {
+      0: ['variables.photo'],
+    };
+
+    const formData = new FormData();
+    formData.append('operations', JSON.stringify(operations));
+    formData.append('map', JSON.stringify(map));
+    formData.append('0', file, file.name);
+
+    console.log(formData);
+    const response = await fetch('http://localhost:3001/graphql', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'apollo-require-preflight': 'true',
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `HTTP error! Status: ${response.status}, Response: ${errorText}`
+      );
+    }
+
+    const result = await response.json();
+    if (result.errors) {
+      console.error('GraphQL errors:', result.errors);
+    } else {
+      console.log('Account updated successfully:', result.data.updateAccount);
+    }
+  } catch (error) {
+    console.error('Error updating account:', error);
+  }
+  closePhotoModal();
 }
 
 function openModal(title, fields, initialData = {}) {
@@ -266,3 +454,9 @@ definePageMeta({
   middleware: 'auth',
 });
 </script>
+
+<style>
+.filepond--root {
+  width: 100%;
+}
+</style>
