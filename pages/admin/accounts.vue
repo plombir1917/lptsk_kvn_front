@@ -457,6 +457,7 @@ async function handleModalSubmit(data) {
       alert('Ошибка при создании аккаунта. Пожалуйста попробуйте снова.');
     }
   } catch (error) {
+    console.log(111);
     console.error('Ошибка при создании аккаунта:', error);
   }
 }
