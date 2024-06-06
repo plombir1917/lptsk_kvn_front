@@ -23,8 +23,11 @@ import { ref } from 'vue';
 import vueFilePond from 'vue-filepond';
 import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
+import { useToast } from 'vue-toastification';
 
 const acceptedFileTypes = ['image/*'];
+
+const toast = useToast();
 
 const FilePond = vueFilePond();
 const emit = defineEmits(['save', 'close']);
@@ -52,10 +55,10 @@ const saveImage = async () => {
       emit('save', formData);
       emit('close');
     } catch (error) {
-      console.error('Ошибка сохранения изображения:', error);
+      toast.error('Ошибка сохранения изображения:', error);
     }
   } else {
-    console.warn('Файл не выбран или не является объектом File.');
+    toast.warning('Файл не выбран или не является объектом File.');
   }
 };
 </script>

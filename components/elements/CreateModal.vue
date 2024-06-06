@@ -27,6 +27,9 @@
             </select>
           </template>
           <template v-else-if="field.name === 'photo'">
+            <div v-if="photo" class="mt-2">
+              <img :src="photoUrl" alt="Фото" class="w-32 h-32 rounded-full" />
+            </div>
             <button
               type="button"
               @click="openPhotoModal"
@@ -34,13 +37,6 @@
             >
               Загрузить фото
             </button>
-            <div v-if="formData[field.name]" class="mt-2">
-              <img
-                :src="formData.name"
-                alt="Фото"
-                class="w-32 h-32 rounded-full"
-              />
-            </div>
           </template>
           <template v-else>
             <input
@@ -99,9 +95,11 @@ const formData = ref({ ...props.initialData });
 const isPhotoModalOpen = ref(false);
 
 let photo;
+let photoUrl;
 
 function savePhoto(formData) {
   photo = formData.get('photo');
+  photoUrl = URL.createObjectURL(photo);
   closePhotoModal();
 }
 

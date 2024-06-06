@@ -181,7 +181,6 @@
     <div
       v-if="isPhotoModalOpen"
       class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-      @click="closePhotoModal"
     >
       <div class="bg-white rounded-lg shadow-lg p-6 w-1/2">
         <ImageUpload @save="savePhoto" @close="closePhotoModal" />
