@@ -1,8 +1,9 @@
 <!-- components/DynamicModal.vue -->
 <template>
   <div
+    @click.self="handleClose"
     v-if="isOpen"
-    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 dark:text-gray-200"
   >
     <div class="bg-white dark:bg-gray-800 p-6 rounded-lg w-1/3">
       <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
@@ -19,7 +20,7 @@
             <select
               v-model="formData[field.name]"
               :id="field.name"
-              class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              class="dark:text-white mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             >
               <option value="EDITOR">Редактор</option>
               <option value="ADMIN">Администратор</option>
