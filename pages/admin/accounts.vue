@@ -134,33 +134,35 @@
             <td
               class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
             >
-              <button
-                v-if="account.isEditing"
-                @click="saveAccount(account)"
-                class="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700"
-              >
-                Сохранить
-              </button>
-              <button
-                v-if="account.isEditing"
-                @click="cancelEdit(account)"
-                class="px-3 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700"
-              >
-                Отмена
-              </button>
-              <button
-                v-else
-                @click="editAccount(account)"
-                class="px-3 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700"
-              >
-                Редактировать
-              </button>
-              <button
-                @click="deleteAccount(account.id)"
-                class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
-              >
-                Удалить
-              </button>
+              <div class="flex gap-1 justify-center">
+                <button
+                  v-if="account.isEditing"
+                  @click="saveAccount(account)"
+                  class="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700"
+                >
+                  Сохранить
+                </button>
+                <button
+                  v-if="account.isEditing"
+                  @click="cancelEdit(account)"
+                  class="px-3 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700"
+                >
+                  Отмена
+                </button>
+                <button
+                  v-else
+                  @click="editAccount(account)"
+                  class="px-3 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700"
+                >
+                  Редактировать
+                </button>
+                <button
+                  @click="deleteAccount(account.id)"
+                  class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
+                >
+                  Удалить
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -179,6 +181,7 @@
     <div
       v-if="isPhotoModalOpen"
       class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+      @click="closePhotoModal"
     >
       <div class="bg-white rounded-lg shadow-lg p-6 w-1/2">
         <ImageUpload @save="savePhoto" @close="closePhotoModal" />
@@ -189,6 +192,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useToast } from 'vue-toastification';
 import CreateModal from '@/components/elements/CreateModal.vue';
 import ImageUpload from '@/components/elements/ImageUpload.vue';
 
@@ -243,16 +247,20 @@ async function fetchAccounts() {
       }));
     } else {
       console.error('При получении аккаунтов произошла ошибка:', result.errors);
-      alert(
+      useToast().error(
         'При получении аккаунтов произошла ошибка. Пожалуйста попробуйте снова.'
       );
     }
   } catch (error) {
     console.error('Error fetching accounts:', error);
+    useToast().error(
+      'Ошибка при получении аккаунтов. Пожалуйста попробуйте снова.'
+    );
   }
 }
 
 async function deleteAccount(id) {
+  const toast = useToast();
   const mutation = `
     mutation {
       deleteAccount(id: "${id}") {
@@ -274,13 +282,14 @@ async function deleteAccount(id) {
     const result = await response.json();
     if (response.ok && result.data && result.data.deleteAccount) {
       accounts.value = accounts.value.filter((account) => account.id !== id);
-      alert('Аккаунт успешно удален.');
+      toast.success('Аккаунт успешно удален.');
     } else {
       console.error('Удаление аккаунта не удалось:', result.errors);
-      alert('Удаление аккаунта не удалось. Пожалуйста попробуйте снова.');
+      toast.error('Удаление аккаунта не удалось. Пожалуйста попробуйте снова.');
     }
   } catch (error) {
     console.error('Ошибка удаления аккаунта:', error);
+    toast.error('Ошибка удаления аккаунта. Пожалуйста попробуйте снова.');
   }
 }
 
@@ -294,7 +303,7 @@ function cancelEdit(account) {
 }
 
 async function saveAccount(account) {
-  console.log(444);
+  const toast = useToast();
   const mutation = `
     mutation($input: UpdateAccountInput!) {
       updateAccount(id: "${account.id}", input: $input) {
@@ -331,13 +340,16 @@ async function saveAccount(account) {
     const result = await response.json();
     if (response.ok && result.data && result.data.updateAccount) {
       account.isEditing = false;
-      alert('Изменения успешно сохранены.');
+      toast.success('Изменения успешно сохранены.');
     } else {
       console.error('Обновление аккаунта не удалось:', result.errors);
-      alert('Обновление аккаунта не удалось. Пожалуйста попробуйте снова.');
+      toast.error(
+        'Обновление аккаунта не удалось. Пожалуйста попробуйте снова.'
+      );
     }
   } catch (error) {
-    alert('Ошибка обновления аккаунта:', error);
+    console.error('Ошибка обновления аккаунта:', error);
+    toast.error('Ошибка обновления аккаунта. Пожалуйста попробуйте снова.');
   }
 }
 
@@ -353,6 +365,7 @@ function closePhotoModal() {
 
 async function savePhoto(formData) {
   const file = formData.get('photo');
+  const toast = useToast();
   try {
     const token = localStorage.getItem('access_token');
     const operations = {
@@ -367,7 +380,7 @@ async function savePhoto(formData) {
       `,
       variables: {
         id: currentAccount.value.id,
-        photo: null, // Это значение будет заменено на файл в мультипарт запросе
+        photo: null,
       },
     };
     const map = {
@@ -398,11 +411,13 @@ async function savePhoto(formData) {
     const result = await response.json();
     if (result.errors) {
       console.error('GraphQL errors:', result.errors);
+      toast.error('Ошибка при изменении фото.');
     } else {
-      alert('Фото успешно изменено.');
+      toast.success('Фото успешно изменено.');
     }
   } catch (error) {
-    alert('Error updating account:', error);
+    console.error('Ошибка при изменении фото:', error);
+    toast.error('Ошибка при изменении фото.');
   }
   closePhotoModal();
 }
@@ -418,52 +433,79 @@ function closeModal() {
   isModalOpen.value = false;
 }
 
-async function handleModalSubmit(data) {
+async function handleModalSubmit(data, photo) {
+  const toast = useToast();
   const mutation = `
-  mutation($input: CreateAccountInput!) {
-    createAccount(input: $input) {
-      id
-      name
-      surname
-      phone
-      login
-      password
-      role
-      photo
+    mutation($input: CreateAccountInput!) {
+      createAccount(input: $input) {
+        id
+        name
+        surname
+        phone
+        login
+        password
+        role
+        photo
+      }
     }
-  }
   `;
+
   const variables = {
-    input: data,
+    input: {
+      name: data.name,
+      surname: data.surname,
+      phone: data.phone,
+      login: data.login,
+      password: data.password,
+      role: data.role,
+      photo: null,
+    },
   };
 
   try {
     const token = localStorage.getItem('access_token');
+
+    const operations = {
+      query: mutation,
+      variables: variables,
+    };
+
+    const map = {
+      0: ['variables.input.photo'],
+    };
+
+    const formData = new FormData();
+    formData.append('operations', JSON.stringify(operations));
+    formData.append('map', JSON.stringify(map));
+    formData.append('0', photo);
+
     const response = await fetch('http://localhost:3001/graphql', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
+        'apollo-require-preflight': 'true',
       },
-      body: JSON.stringify({ query: mutation, variables }),
+      body: formData,
     });
 
     const result = await response.json();
     if (response.ok && result.data && result.data.createAccount) {
       accounts.value.push(result.data.createAccount);
       closeModal();
+      toast.success('Аккаунт успешно создан.');
     } else {
       console.error('Creating account failed:', result.errors);
-      alert('Ошибка при создании аккаунта. Пожалуйста попробуйте снова.');
+      toast.error('Ошибка при создании аккаунта. Пожалуйста попробуйте снова.');
     }
   } catch (error) {
-    console.log(111);
     console.error('Ошибка при создании аккаунта:', error);
+    toast.error('Ошибка при создании аккаунта. Пожалуйста попробуйте снова.');
   }
 }
 
-onMounted(fetchAccounts);
-
+onMounted(() => {
+  fetchAccounts();
+});
 definePageMeta({
   layout: 'admin',
   middleware: 'auth',

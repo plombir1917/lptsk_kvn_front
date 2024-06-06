@@ -1,7 +1,7 @@
 <template>
   <ElementsLoadingPage v-if="isLoading" />
   <div
-    class="overflow-y-auto flex flex-col lg:flex-row h-screen bg-body dark:bg-gray-900"
+    class="flex flex-col lg:flex-row h-screen bg-body dark:bg-gray-900 overflow-y-auto"
   >
     <!-- Sidebar -->
     <aside
@@ -108,9 +108,7 @@
       </header>
 
       <!-- Page Content -->
-      <main
-        class="flex-1 overflow-x-hidden overflow-y-hidden bg-body dark:bg-gray-900"
-      >
+      <main class="flex-1 bg-body dark:bg-gray-900">
         <div class="container mx-auto px-6 py-8">
           <slot />
         </div>

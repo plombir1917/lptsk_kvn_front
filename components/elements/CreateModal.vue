@@ -34,9 +34,9 @@
             >
               Загрузить фото
             </button>
-            <div v-if="formData.photo" class="mt-2">
+            <div v-if="formData[field.name]" class="mt-2">
               <img
-                :src="formData.photo"
+                :src="formData.name"
                 alt="Фото"
                 class="w-32 h-32 rounded-full"
               />
@@ -98,6 +98,13 @@ const emits = defineEmits(['close', 'submit']);
 const formData = ref({ ...props.initialData });
 const isPhotoModalOpen = ref(false);
 
+let photo;
+
+function savePhoto(formData) {
+  photo = formData.get('photo');
+  closePhotoModal();
+}
+
 watch(
   () => props.initialData,
   (newData) => {
@@ -110,7 +117,7 @@ function handleClose() {
 }
 
 function handleSubmit() {
-  emits('submit', formData.value);
+  emits('submit', formData.value, photo);
 }
 
 function openPhotoModal() {
@@ -119,11 +126,5 @@ function openPhotoModal() {
 
 function closePhotoModal() {
   isPhotoModalOpen.value = false;
-}
-
-function savePhoto(formData) {
-  const photo = formData.get('photo');
-  formData.value = photo;
-  closePhotoModal();
 }
 </script>
