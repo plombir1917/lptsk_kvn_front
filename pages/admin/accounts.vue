@@ -479,6 +479,7 @@ async function handleModalSubmit(data, photo) {
       accounts.value.push(result.data.createAccount);
       closeModal();
       toast.success('Аккаунт успешно создан.');
+      fetchAccounts()
     } else {
       console.error('Creating account failed:', result.errors);
       toast.error('Ошибка при создании аккаунта. Пожалуйста попробуйте снова.');

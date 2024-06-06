@@ -421,6 +421,7 @@ async function handleModalSubmit(data, photo) {
       events.value.push(result.data.createEvent);
       closeModal();
       toast.success('Мероприятие успешно создано.');
+      fetchEvents()
     } else {
       console.error('Creating event failed:', result.errors);
       toast.error(
