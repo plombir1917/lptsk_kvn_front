@@ -65,10 +65,10 @@
               class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
             >
               <img
-                :src="account.photo"
+                :src="'/kvn-logo.jpg'"
                 alt="Фото"
                 class="w-20 h-20 rounded-full mx-auto"
-              />
+              >{{ account.photo }}</img>
               <button
                 v-if="account.isEditing"
                 @click="openPhotoModal(account)"
@@ -179,6 +179,7 @@
     />
 
     <div
+      @click.self="closePhotoModal"
       v-if="isPhotoModalOpen"
       class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
     >
@@ -307,11 +308,6 @@ async function saveAccount(account) {
     mutation($input: UpdateAccountInput!) {
       updateAccount(id: "${account.id}", input: $input) {
         id
-        name
-        surname
-        phone
-        login
-        role
       }
     }
   `;
@@ -372,8 +368,6 @@ async function savePhoto(formData) {
         mutation($photo: Upload!, $id: String!) {
           updateAccount(id: $id, input: { photo: $photo }) {
             id
-            login
-            photo
           }
         }
       `,
@@ -438,13 +432,6 @@ async function handleModalSubmit(data, photo) {
     mutation($input: CreateAccountInput!) {
       createAccount(input: $input) {
         id
-        name
-        surname
-        phone
-        login
-        password
-        role
-        photo
       }
     }
   `;
