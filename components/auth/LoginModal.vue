@@ -29,16 +29,24 @@
               required
             />
           </div>
-          <div class="mb-4">
+          <div class="mb-4 relative">
             <label class="block text-gray-700 dark:text-gray-300 mb-2"
               >Пароль</label
             >
             <input
-              type="password"
+              :type="showPassword ? 'text' : 'password'"
               v-model="password"
               class="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 focus:outline-none focus:ring focus:ring-blue-500"
               required
             />
+            <button
+              type="button"
+              @click="togglePasswordVisibility"
+              class="absolute inset-y-0 right-0 top-8 px-3 py-2 text-gray-600 dark:text-gray-300 focus:outline-none"
+            >
+              <EyeIcon v-if="showPassword" class="h-6 w-6" />
+              <eye-slash-icon v-else class="h-6 w-6" />
+            </button>
           </div>
           <div class="flex items-center justify-between">
             <button
@@ -64,16 +72,29 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
+import {
+  EyeIcon,
+  EyeDropperIcon,
+  EyeSlashIcon,
+} from '@heroicons/vue/24/outline';
 
 const props = defineProps<{
   isOpen: boolean;
   closeModal: () => void;
 }>();
 
+const toast = useToast();
+
 const email = ref('');
 const password = ref('');
+const showPassword = ref(false); // Добавляем состояние для видимости пароля
 
 const router = useRouter();
+
+function togglePasswordVisibility() {
+  showPassword.value = !showPassword.value;
+}
 
 async function login() {
   const query = `
@@ -105,10 +126,12 @@ async function login() {
       props.closeModal();
       router.push('/admin');
     } else {
-      alert('Login failed. Please check your credentials and try again.');
+      toast.error(
+        'Неправильный email или пароль. Пожалуйста, попробуйте еще раз.'
+      );
     }
   } catch (error) {
-    alert('An error occurred( Please? try again.');
+    toast.error('Возникла ошибка при выполнении запроса. Попробуйте еще раз.');
   }
 }
 
