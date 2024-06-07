@@ -248,7 +248,7 @@ async function fetchEvents() {
         result.errors
       );
       useToast().error(
-        'При получении мероприятий произошла ошибка. Пожалуйста попробуйте снова.'
+        `При получении мероприятий произошла ошибка. ${result.errors[0].message}`
       );
     }
   } catch (error) {
