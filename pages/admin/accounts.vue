@@ -65,10 +65,10 @@
               class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
             >
               <img
-                :src="'/kvn-logo.jpg'"
+                :src="account.photo"
                 alt="Фото"
                 class="w-20 h-20 rounded-full mx-auto"
-              >{{ account.photo }}</img>
+              />
               <button
                 v-if="account.isEditing"
                 @click="openPhotoModal(account)"
@@ -334,6 +334,7 @@ async function saveAccount(account) {
 
     const result = await response.json();
     if (response.ok && result.data && result.data.updateAccount) {
+      fetchAccounts();
       account.isEditing = false;
       toast.success('Изменения успешно сохранены.');
     } else {
@@ -479,7 +480,7 @@ async function handleModalSubmit(data, photo) {
       accounts.value.push(result.data.createAccount);
       closeModal();
       toast.success('Аккаунт успешно создан.');
-      fetchAccounts()
+      fetchAccounts();
     } else {
       console.error('Creating account failed:', result.errors);
       toast.error('Ошибка при создании аккаунта. Пожалуйста попробуйте снова.');
