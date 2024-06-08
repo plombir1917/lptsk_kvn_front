@@ -65,9 +65,12 @@
             <td
               class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
             >
-              <img :src="'/kvn-logo.jpg'"  alt="Фото"
-                class="w-20 h-20 rounded-full mx-auto">{{ event.photo }}</img>
-                <button
+              <img
+                :src="'/kvn-logo.jpg'"
+                alt="Фото"
+                class="w-20 h-20 rounded-full mx-auto"
+              />
+              <button
                 v-if="event.isEditing"
                 @click="openPhotoModal(account)"
                 class="mt-1 px-1 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700"
@@ -94,7 +97,9 @@
                 type="date"
                 class="w-full p-2 border rounded"
               />
-              <span v-else>{{ new Date(event.date).toLocaleDateString() }}</span>
+              <span v-else>{{
+                new Date(event.date).toLocaleDateString()
+              }}</span>
             </td>
             <td
               class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
@@ -285,7 +290,9 @@ async function deleteEvent(id) {
       toast.success('Мероприятие успешно удален.');
     } else {
       console.error('Удаление мероприятия не удалось:', result.errors);
-      toast.error('Удаление мероприятия не удалось. Пожалуйста попробуйте снова.');
+      toast.error(
+        'Удаление мероприятия не удалось. Пожалуйста попробуйте снова.'
+      );
     }
   } catch (error) {
     console.error('Ошибка удаления мероприятия:', error);
@@ -317,7 +324,7 @@ async function saveEvent(event) {
       date: event.date,
       place: event.place,
       description: event.description,
-      link: event.link
+      link: event.link,
     },
   };
 
@@ -421,7 +428,7 @@ async function handleModalSubmit(data, photo) {
       events.value.push(result.data.createEvent);
       closeModal();
       toast.success('Мероприятие успешно создано.');
-      fetchEvents()
+      fetchEvents();
     } else {
       console.error('Creating event failed:', result.errors);
       toast.error(
