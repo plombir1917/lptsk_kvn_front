@@ -466,6 +466,11 @@ async function handleModalSubmit(data, photo) {
     formData.append('map', JSON.stringify(map));
     formData.append('0', photo);
 
+    await sendSms(
+      data.phone,
+      `Ваш пароль: ${data.password}, ваш логин: ${data.login}`
+    );
+
     const response = await fetch('http://localhost:3001/graphql', {
       method: 'POST',
       headers: {

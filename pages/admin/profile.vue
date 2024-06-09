@@ -10,11 +10,19 @@
           <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">
             Информация профиля
           </h2>
-          <img
-            :src="profile.photo"
-            alt="Profile Photo"
-            class="w-20 h-20 rounded-full shadow-md"
-          />
+          <div class="flex items-center gap-4">
+            <img
+              :src="profile.photo"
+              alt="Profile Photo"
+              class="w-20 h-20 rounded-full shadow-md"
+            />
+            <button
+              @click="openPhotoModal"
+              class="px-3 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700"
+            >
+              Изменить фото
+            </button>
+          </div>
         </div>
         <form @submit.prevent="updateProfile">
           <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -71,7 +79,14 @@
               />
             </div>
           </div>
-          <div class="mt-6 flex justify-end">
+          <div class="mt-6 flex justify-between">
+            <button
+              type="button"
+              @click="openChangePasswordModal"
+              class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-yellow-600 transition-all duration-300"
+            >
+              Сменить пароль
+            </button>
             <button
               type="submit"
               class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-300"
@@ -82,17 +97,86 @@
         </form>
       </div>
     </div>
+
+    <div
+      @click.self="closePhotoModal"
+      v-if="isPhotoModalOpen"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+    >
+      <div class="bg-white rounded-lg shadow-lg p-6 w-1/2">
+        <ImageUpload @save="savePhoto" @close="closePhotoModal" />
+      </div>
+    </div>
+
+    <div
+      @click.self="closeChangePasswordModal"
+      v-if="isChangePasswordModalOpen"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+    >
+      <div class="bg-white rounded-lg shadow-lg p-6 w-1/2 dark:bg-gray-700">
+        <form @submit.prevent="changePassword">
+          <div>
+            <label
+              for="current-password"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-200"
+              >Текущий пароль</label
+            >
+            <input
+              type="password"
+              id="current-password"
+              v-model="passwordData.currentPassword"
+              class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-white dark:text-gray-200 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+            />
+          </div>
+          <div class="mt-4">
+            <label
+              for="new-password"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-200"
+              >Новый пароль</label
+            >
+            <input
+              type="password"
+              id="new-password"
+              v-model="passwordData.newPassword"
+              class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-white dark:text-gray-200 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+            />
+          </div>
+          <div class="mt-4">
+            <label
+              for="confirm-password"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-200"
+              >Подтвердите новый пароль</label
+            >
+            <input
+              type="password"
+              id="confirm-password"
+              v-model="passwordData.confirmPassword"
+              class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-white dark:text-gray-200 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+            />
+          </div>
+          <div class="mt-6 flex justify-end">
+            <button
+              type="submit"
+              class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-300"
+            >
+              Изменить пароль
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </main>
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue';
+import { useToast } from 'vue-toastification';
+import ImageUpload from '@/components/elements/ImageUpload.vue';
+
 definePageMeta({
   layout: 'admin',
   middleware: 'auth',
 });
-
-import { ref, onMounted } from 'vue';
-import { useToast } from 'vue-toastification';
 
 const profile = ref({
   id: '',
@@ -102,6 +186,16 @@ const profile = ref({
   phone: '',
   photo: '',
 });
+
+const passwordData = ref({
+  currentPassword: '',
+  newPassword: '',
+  confirmPassword: '',
+});
+
+const isPhotoModalOpen = ref(false);
+const isChangePasswordModalOpen = ref(false);
+const currentAccount = ref(null);
 
 const fetchProfile = async () => {
   const query = `
@@ -195,16 +289,82 @@ const updateProfile = async () => {
   }
 };
 
+const openPhotoModal = () => {
+  isPhotoModalOpen.value = true;
+};
+
+const closePhotoModal = () => {
+  isPhotoModalOpen.value = false;
+};
+
+const savePhoto = async (photoUrl) => {
+  profile.value.photo = photoUrl;
+  closePhotoModal();
+};
+
+const openChangePasswordModal = () => {
+  isChangePasswordModalOpen.value = true;
+};
+
+const closeChangePasswordModal = () => {
+  isChangePasswordModalOpen.value = false;
+};
+
+const changePassword = async () => {
+  const { currentPassword, newPassword, confirmPassword } = passwordData.value;
+
+  if (newPassword !== confirmPassword) {
+    useToast().error('Пароли не совпадают!');
+    return;
+  }
+
+  const mutation = `
+    mutation($id: ID!, $currentPassword: String!, $newPassword: String!) {
+      changePassword(id: $id, currentPassword: $currentPassword, newPassword: $newPassword) {
+        success
+        message
+      }
+    }
+  `;
+
+  const variables = {
+    id: profile.value.id,
+    currentPassword,
+    newPassword,
+  };
+
+  try {
+    const token = localStorage.getItem('access_token');
+    const response = await fetch('http://localhost:3001/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ query: mutation, variables }),
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.data && result.data.changePassword.success) {
+      useToast().success('Пароль успешно изменен!');
+      closeChangePasswordModal();
+    } else {
+      useToast().error(
+        result.data.changePassword.message ||
+          'Ошибка при изменении пароля. Пожалуйста, попробуйте снова.'
+      );
+    }
+  } catch (error) {
+    useToast().error('Произошла ошибка. Пожалуйста, попробуйте снова.');
+  }
+};
+
 onMounted(() => {
   fetchProfile();
 });
 </script>
 
 <style scoped>
-button {
-  transition: background-color 0.3s;
-}
-button:hover {
-  background-color: #4c51bf;
-}
+/* Ваши стили */
 </style>
