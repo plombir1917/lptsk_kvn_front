@@ -13,7 +13,7 @@
           <div class="flex items-center gap-4">
             <img
               :src="profile.photo"
-              alt="Profile Photo"
+              alt="Фото"
               class="w-20 h-20 rounded-full shadow-md"
             />
             <button
@@ -297,10 +297,63 @@ const closePhotoModal = () => {
   isPhotoModalOpen.value = false;
 };
 
-const savePhoto = async (photoUrl) => {
-  profile.value.photo = photoUrl;
+async function savePhoto(formData) {
+  const file = formData.get('photo');
+  const toast = useToast();
+  try {
+    const token = localStorage.getItem('access_token');
+    const operations = {
+      query: `
+        mutation($photo: Upload!, $id: String!) {
+          updateAccount(id: $id, input: { photo: $photo }) {
+            id
+          }
+        }
+      `,
+      variables: {
+        id: promisifyNodeListener.value.id,
+        photo: null,
+      },
+    };
+    const map = {
+      0: ['variables.photo'],
+    };
+
+    const formData = new FormData();
+    formData.append('operations', JSON.stringify(operations));
+    formData.append('map', JSON.stringify(map));
+    formData.append('0', file, file.name);
+
+    const response = await fetch('http://localhost:3001/graphql', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'apollo-require-preflight': 'true',
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `HTTP error! Status: ${response.status}, Response: ${errorText}`
+      );
+    }
+
+    const result = await response.json();
+    if (result.errors) {
+      console.error('GraphQL errors:', result.errors);
+      toast.error('Ошибка при изменении фото.');
+    } else {
+      toast.success('Фото успешно изменено.');
+    }
+  } catch (error) {
+    console.error('Ошибка при изменении фото:', error);
+    toast.error('Ошибка при изменении фото.');
+  }
+  fetchProfile();
   closePhotoModal();
-};
+}
 
 const openChangePasswordModal = () => {
   isChangePasswordModalOpen.value = true;
