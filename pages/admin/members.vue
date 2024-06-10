@@ -31,7 +31,7 @@
             <th
               class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-center text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
             >
-              Роль
+              Телефон
             </th>
             <th
               class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-center text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
@@ -82,20 +82,24 @@
             >
               <input
                 v-if="member.isEditing"
-                v-model="member.role"
+                v-model="member.phone"
                 class="w-full p-2 border rounded"
               />
-              <span v-else>{{ member.role }}</span>
+              <span v-else>{{ member.phone }}</span>
             </td>
             <td
               class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
             >
-              <input
+              <select
                 v-if="member.isEditing"
-                v-model="member.team"
+                v-model="member.team_id"
                 class="w-full p-2 border rounded"
-              />
-              <span v-else>{{ member.team }}</span>
+              >
+                <option v-for="team in teams" :key="team.id" :value="team.id">
+                  {{ team.name }}
+                </option>
+              </select>
+              <span v-else>{{ member.team.name }}</span>
             </td>
             <td
               class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
@@ -163,6 +167,7 @@ import CreateModal from '@/components/elements/CreateModal.vue';
 import ImageUpload from '@/components/elements/ImageUpload.vue';
 
 const members = ref([]);
+const teams = ref([]);
 const isModalOpen = ref(false);
 const isPhotoModalOpen = ref(false);
 const currentMember = ref(null);
@@ -172,10 +177,50 @@ const modalInitialData = ref({});
 
 const memberFields = [
   { name: 'name', label: 'Имя', type: 'text' },
-  { name: 'role', label: 'Роль', type: 'text' },
-  { name: 'team', label: 'Команда', type: 'text' },
+  { name: 'phone', label: 'Телефон', type: 'text' },
   { name: 'photo', label: 'Фото', type: 'text' },
+  { name: 'team_id', label: 'Команда', type: 'select', options: teams },
 ];
+
+async function fetchTeams() {
+  const query = `
+  query {
+    getTeams {
+      id
+      name
+    }
+  }
+  `;
+  try {
+    const token = localStorage.getItem('access_token');
+    const response = await fetch('http://localhost:3001/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ query }),
+    });
+
+    const result = await response.json();
+    if (response.ok && result.data && result.data.getTeams) {
+      teams.value = result.data.getTeams.map((team) => ({
+        value: team.id,
+        label: team.name,
+      }));
+    } else {
+      console.error('При получении команд произошла ошибка:', result.errors);
+      useToast().error(
+        'При получении команд произошла ошибка. Пожалуйста попробуйте снова.'
+      );
+    }
+  } catch (error) {
+    console.error('Ошибка при получении команд:', error);
+    useToast().error(
+      'Ошибка при получении команд. Пожалуйста попробуйте снова.'
+    );
+  }
+}
 
 async function fetchMembers() {
   const query = `
@@ -183,9 +228,11 @@ async function fetchMembers() {
     getMembers {
       id
       name
-      role
-      team
+      phone
       photo
+      team {
+        name
+        }
     }
   }
   `;
@@ -274,12 +321,12 @@ async function saveMember(member) {
     mutation {
       updateMember(id: "${member.id}", input: {
         name: "${member.name}",
-        role: "${member.role}",
+        phone: "${member.phone}",
         team: "${member.team}"
       }) {
         id
         name
-        role
+        phone
         team
       }
     }
@@ -322,50 +369,65 @@ function closeModal() {
   isModalOpen.value = false;
 }
 
-async function createMember(data) {
+async function handleModalSubmit(data, photo) {
   const toast = useToast();
   const mutation = `
-    mutation {
-      createMember(input: {
-        name: "${data.name}",
-        role: "${data.role}",
-        team: "${data.team}",
-        photo: "${data.photo}"
-      }) {
+    mutation($input: CreateMemberInput!) {
+      createMember(input: $input) {
         id
-        name
-        role
-        team
-        photo
       }
     }
   `;
 
+  const variables = {
+    input: {
+      name: data.name,
+      phone: data.phone,
+      photo: null,
+      team_id: data.team_id,
+    },
+  };
+
   try {
     const token = localStorage.getItem('access_token');
+
+    const operations = {
+      query: mutation,
+      variables: variables,
+    };
+
+    const map = {
+      0: ['variables.input.photo'],
+    };
+
+    const formData = new FormData();
+    formData.append('operations', JSON.stringify(operations));
+    formData.append('map', JSON.stringify(map));
+    formData.append('0', photo);
+
     const response = await fetch('http://localhost:3001/graphql', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
+        'apollo-require-preflight': 'true',
       },
-      body: JSON.stringify({ query: mutation }),
+      body: formData,
     });
 
     const result = await response.json();
     if (response.ok && result.data && result.data.createMember) {
-      members.value.push({
-        ...result.data.createMember,
-        isEditing: false,
-      });
+      fetchMembers();
+      closeModal();
       toast.success('Участник успешно создан.');
     } else {
-      console.error('Ошибка создания участника:', result.errors);
-      toast.error('Ошибка создания участника. Пожалуйста попробуйте снова.');
+      console.error('Creating team failed:', result.errors);
+      toast.error(
+        'Ошибка при создании участника. Пожалуйста попробуйте снова.'
+      );
     }
   } catch (error) {
-    console.error('Ошибка создания участника:', error);
-    toast.error('Ошибка создания участника. Пожалуйста попробуйте снова.');
+    console.error('Ошибка при создании участника:', error);
+    toast.error('Ошибка при создании участника. Пожалуйста попробуйте снова.');
   }
 }
 
@@ -386,7 +448,10 @@ async function savePhoto(photoUrl) {
   closePhotoModal();
 }
 
-onMounted(fetchMembers);
+onMounted(() => {
+  fetchMembers();
+  fetchTeams();
+});
 
 definePageMeta({
   layout: 'admin',

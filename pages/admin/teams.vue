@@ -120,10 +120,15 @@
             <td
               class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
             >
-              <select v-model="team.active" class="w-full p-2 border rounded">
+              <select
+                v-if="team.isEditing"
+                v-model="team.active"
+                class="w-full p-2 border rounded"
+              >
                 <option :value="true">Да</option>
                 <option :value="false">Нет</option>
               </select>
+              <span v-else>{{ team.active }}</span>
             </td>
             <td
               class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
