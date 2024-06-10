@@ -52,6 +52,11 @@
             <th
               class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-center text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
             >
+              Создано
+            </th>
+            <th
+              class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-center text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
+            >
               Действия
             </th>
           </tr>
@@ -130,6 +135,11 @@
                 class="w-full p-2 border rounded"
               />
               <span v-else>{{ event.link }}</span>
+            </td>
+            <td
+              class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
+            >
+              <span>{{ new Date(event.created_at).toLocaleDateString() }}</span>
             </td>
             <td
               class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
@@ -213,6 +223,7 @@ const eventFields = [
   { name: 'description', label: 'Описание', type: 'text' },
   { name: 'photo', label: 'Фото', type: 'text' },
   { name: 'link', label: 'Ссылка', type: 'text' },
+  { name: 'created_at', label: 'Создано', type: 'text' },
 ];
 
 async function fetchEvents() {
@@ -226,6 +237,7 @@ async function fetchEvents() {
       description
       photo
       link
+      created_at
     }
   }
   `;
