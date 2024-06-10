@@ -1,4 +1,3 @@
-<!-- components/DynamicModal.vue -->
 <template>
   <div
     @click.self="handleClose"
@@ -34,7 +33,7 @@
               class="dark:text-white mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             >
               <option value="true">Да</option>
-              <option value="">Нет</option>
+              <option value="false">Нет</option>
             </select>
           </template>
           <template v-else-if="field.name === 'photo'">
@@ -48,6 +47,21 @@
             >
               Загрузить фото
             </button>
+          </template>
+          <template v-else-if="field.type === 'select' && field.options">
+            <select
+              v-model="formData[field.name]"
+              :id="field.name"
+              class="dark:text-white mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            >
+              <option
+                v-for="option in field.options"
+                :key="option.value"
+                :value="option.value"
+              >
+                {{ option.label }}
+              </option>
+            </select>
           </template>
           <template v-else>
             <input
