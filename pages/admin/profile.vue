@@ -311,7 +311,7 @@ async function savePhoto(formData) {
         }
       `,
       variables: {
-        id: promisifyNodeListener.value.id,
+        id: profile.value.id,
         photo: null,
       },
     };
