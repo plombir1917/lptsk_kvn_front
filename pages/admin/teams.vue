@@ -92,10 +92,10 @@
             >
               <input
                 v-if="team.isEditing"
-                v-model="team.achievements"
+                v-model="team.achievments"
                 class="w-full p-2 border rounded"
               />
-              <span v-else>{{ team.achievements }}</span>
+              <span v-else>{{ team.achievments }}</span>
             </td>
             <td
               class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
@@ -198,9 +198,9 @@ const modalInitialData = ref({});
 
 const teamFields = [
   { name: 'name', label: 'Название', type: 'text' },
-  { name: 'achievements', label: 'Достижения', type: 'text' },
+  { name: 'achievments', label: 'Достижения', type: 'text' },
   { name: 'home', label: 'Родина', type: 'text' },
-  { name: 'rate', label: 'Рейтинг', type: 'text' },
+  { name: 'rate', label: 'Рейтинг', type: 'number' },
   {
     name: 'active',
     label: 'Активна',
@@ -219,7 +219,7 @@ async function fetchTeams() {
     getTeams {
       id
       name
-      achievements
+      achievments
       home
       rate
       active
@@ -262,7 +262,7 @@ async function deleteTeam(id) {
   const toast = useToast();
   const mutation = `
     mutation {
-      deleteTeam(id: "${id}") {
+      deleteTeam(id: "${+id}") {
         id
       }
     }
@@ -307,7 +307,7 @@ async function saveTeam(team) {
     mutation {
       updateTeam(id: "${team.id}", input: {
         name: "${team.name}",
-        achievements: "${team.achievements}",
+        achievments: "${team.achievments}",
         home: "${team.home}"
         rate: "${team.rate}"
         active: "${team.active}"
@@ -384,10 +384,10 @@ async function handleModalSubmit(data, photo) {
   const variables = {
     input: {
       name: data.name,
-      achievements: data.achievements,
+      achievments: data.achievments,
       home: data.home,
       rate: data.rate,
-      active: data.active,
+      active: !!data.active,
       photo: null,
     },
   };
@@ -403,7 +403,7 @@ async function handleModalSubmit(data, photo) {
     const map = {
       0: ['variables.input.photo'],
     };
-    new FormData();
+    const formData = new FormData();
     formData.append('operations', JSON.stringify(operations));
     formData.append('map', JSON.stringify(map));
     formData.append('0', photo);

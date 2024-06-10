@@ -27,6 +27,16 @@
               <option value="DIRECTOR">Директор</option>
             </select>
           </template>
+          <template v-if="field.name === 'active'">
+            <select
+              v-model="formData[field.name]"
+              :id="field.name"
+              class="dark:text-white mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            >
+              <option value="true">Да</option>
+              <option value="">Нет</option>
+            </select>
+          </template>
           <template v-else-if="field.name === 'photo'">
             <div v-if="photo" class="mt-2">
               <img :src="photoUrl" alt="Фото" class="w-32 h-32 rounded-full" />
