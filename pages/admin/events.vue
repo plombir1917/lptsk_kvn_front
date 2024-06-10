@@ -223,7 +223,6 @@ const eventFields = [
   { name: 'description', label: 'Описание', type: 'text' },
   { name: 'photo', label: 'Фото', type: 'text' },
   { name: 'link', label: 'Ссылка', type: 'text' },
-  { name: 'created_at', label: 'Создано', type: 'text' },
 ];
 
 async function fetchEvents() {

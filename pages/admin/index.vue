@@ -79,10 +79,8 @@ function renderGanttChart(events: any) {
     view_mode: "Day",
     date_format: "YYYY-MM-DD",
     language: "ru", 
-    on_click: (task) => useToast().info(task),
     on_date_change: (task, start, end) => useToast().info(`${task} - ${start} - ${end}`),
     on_progress_change: (task, progress) => useToast().info(`${task} - ${progress}`),
-    on_view_change: (mode) => useToast().info(mode),
     custom_popup_html: (task) => `
       <div class="details-container">
         <h5>${task.name}</h5>
