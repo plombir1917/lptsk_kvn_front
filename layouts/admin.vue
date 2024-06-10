@@ -45,6 +45,35 @@
             </li>
             <li class="mt-3">
               <nuxt-link
+                to="/admin/seasons"
+                :class="[
+                  'flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 hover:text-blue-500',
+                  isActiveRoute('/admin/seasons')
+                    ? 'bg-blue-100 dark:bg-blue-800 text-blue-500'
+                    : '',
+                ]"
+              >
+                <SeasonIcon class="w-5 h-5 mr-2" />
+                Сезоны
+              </nuxt-link>
+            </li>
+            <li class="mt-3">
+              <nuxt-link
+                to="/admin/news"
+                :class="[
+                  'flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 hover:text-blue-500',
+                  isActiveRoute('/admin/news')
+                    ? 'bg-blue-100 dark:bg-blue-800 text-blue-500'
+                    : '',
+                ]"
+              >
+                <NewspaperIcon class="w-5 h-5 mr-2" />
+                Новости
+              </nuxt-link>
+            </li>
+
+            <li class="mt-3">
+              <nuxt-link
                 to="/admin/events"
                 :class="[
                   'flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 hover:text-blue-500',
@@ -83,6 +112,34 @@
               >
                 <UserGroupIcon class="w-5 h-5 mr-2" />
                 Участники
+              </nuxt-link>
+            </li>
+            <li class="mt-3">
+              <nuxt-link
+                to="/admin/tickets"
+                :class="[
+                  'flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 hover:text-blue-500',
+                  isActiveRoute('/admin/tickets')
+                    ? 'bg-blue-100 dark:bg-blue-800 text-blue-500'
+                    : '',
+                ]"
+              >
+                <TicketIcon class="w-5 h-5 mr-2" />
+                Билеты
+              </nuxt-link>
+            </li>
+            <li class="mt-3">
+              <nuxt-link
+                to="/admin/contests"
+                :class="[
+                  'flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 hover:text-blue-500',
+                  isActiveRoute('/admin/contests')
+                    ? 'bg-blue-100 dark:bg-blue-800 text-blue-500'
+                    : '',
+                ]"
+              >
+                <ContestIcon class="w-5 h-5 mr-2" />
+                Конкурсы
               </nuxt-link>
             </li>
             <li class="mt-3">
@@ -151,6 +208,10 @@ import {
   UserGroupIcon,
   Cog6ToothIcon,
   CalendarIcon,
+  NewspaperIcon,
+  TicketIcon,
+  ArchiveBoxIcon as ContestIcon,
+  StarIcon as SeasonIcon,
 } from '@heroicons/vue/24/outline';
 import { useRouter, useRoute } from 'vue-router';
 
