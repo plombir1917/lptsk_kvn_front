@@ -68,6 +68,17 @@ onMounted(() => {
 
 function renderGanttChart(events: any) {
   new Gantt("#gantt", events.value, {
+    header_height: 50,
+    column_width: 30,
+    step: 24,
+    view_modes: ["Quarter Day", "Half Day", "Day", "Week", "Month"],
+    bar_height: 20,
+    bar_corner_radius: 3,
+    arrow_curve: 5,
+    padding: 18,
+    view_mode: "Day",
+    date_format: "YYYY-MM-DD",
+    language: "ru", 
     on_click: (task) => useToast().info(task),
     on_date_change: (task, start, end) => useToast().info(`${task} - ${start} - ${end}`),
     on_progress_change: (task, progress) => useToast().info(`${task} - ${progress}`),
@@ -99,7 +110,7 @@ function renderGanttChart(events: any) {
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
           Статистика
         </h2>
-        <div id="gantt"></div>
+        <div id="gantt" class="gantt-target"></div>
       </div>
       <div
         class="bg-box-bg dark:bg-gray-800 p-6 rounded-lg shadow-md hover:bg-blue-100 dark:hover:bg-blue-800"
