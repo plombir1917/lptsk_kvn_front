@@ -1,18 +1,20 @@
 <template>
   <div>
     <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">
-      Сезоны
+      Конкурсы
     </h1>
     <div class="mt-4 flex justify-between items-center">
-      <p class="text-gray-600 dark:text-gray-300">Управляйте сезонами здесь.</p>
+      <p class="text-gray-600 dark:text-gray-300">
+        Управляйте конкурсами здесь.
+      </p>
       <button
-        @click="openModal('Создать сезон', seasonFields, createSeason)"
+        @click="openModal('Создать конкурс', contestFields)"
         class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 dark:bg-gray-700 dark:hover:bg-gray-800"
       >
-        Создать сезон
+        Создать конкурс
       </button>
     </div>
-    <!-- Таблица сезонов -->
+    <!-- Таблица конкурсов -->
     <div class="mt-6 overflow-x-auto">
       <table class="min-w-full bg-white dark:bg-gray-800 overflow-x-auto">
         <thead>
@@ -20,7 +22,18 @@
             <th
               class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-center text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
             >
-              Год
+              Название
+            </th>
+
+            <th
+              class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-center text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
+            >
+              Длительность
+            </th>
+            <th
+              class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-center text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
+            >
+              Описание
             </th>
             <th
               class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-center text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
@@ -31,47 +44,67 @@
         </thead>
         <tbody>
           <tr
-            v-for="season in seasons"
-            :key="season.id"
+            v-for="contest in contests"
+            :key="contest.id"
             class="bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300"
           >
             <td
               class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
             >
               <input
-                v-if="season.isEditing"
-                v-model="season.year"
+                v-if="contest.isEditing"
+                v-model="contest.name"
                 class="w-full p-2 border rounded"
               />
-              <span v-else>{{ season.year }}</span>
+              <span v-else>{{ contest.name }}</span>
+            </td>
+            <td
+              class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
+            >
+              <input
+                v-if="contest.isEditing"
+                v-model="contest.duration"
+                class="w-full p-2 border rounded"
+              />
+              <span v-else>{{ contest.duration }}</span>
+            </td>
+            <td
+              class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
+            >
+              <textarea
+                v-if="contest.isEditing"
+                v-model="contest.description"
+                class="w-full p-2 border rounded"
+              ></textarea>
+              <span v-else>{{ contest.description }}</span>
             </td>
             <td
               class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
             >
               <div class="flex gap-1 justify-center">
                 <button
-                  v-if="season.isEditing"
-                  @click="saveSeason(season)"
+                  v-if="contest.isEditing"
+                  @click="saveContest(contest)"
                   class="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700"
                 >
                   Сохранить
                 </button>
                 <button
-                  v-if="season.isEditing"
-                  @click="cancelEdit(season)"
+                  v-if="contest.isEditing"
+                  @click="cancelEdit(contest)"
                   class="px-3 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700"
                 >
                   Отмена
                 </button>
                 <button
                   v-else
-                  @click="editSeason(season)"
+                  @click="editContest(contest)"
                   class="px-3 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700"
                 >
                   Редактировать
                 </button>
                 <button
-                  @click="deleteSeason(season.id)"
+                  @click="deleteContest(contest.id)"
                   class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
                 >
                   Удалить
@@ -83,7 +116,7 @@
       </table>
     </div>
 
-    <!-- Модальное окно создания сезона -->
+    <!-- Модальное окно создания конкурса -->
     <CreateModal
       :isOpen="isModalOpen"
       :title="modalTitle"
@@ -100,21 +133,26 @@ import { ref, onMounted } from 'vue';
 import { useToast } from 'vue-toastification';
 import CreateModal from '@/components/elements/CreateModal.vue';
 
-const seasons = ref([]);
+const contests = ref([]);
 const isModalOpen = ref(false);
-const currentSeason = ref(null);
 const modalTitle = ref('');
 const modalFields = ref([]);
 const modalInitialData = ref({});
 
-const seasonFields = [{ name: 'year', label: 'Год', type: 'number' }];
+const contestFields = [
+  { name: 'name', label: 'Название', type: 'text' },
+  { name: 'duration', label: 'Длительность', type: 'number' },
+  { name: 'description', label: 'Описание', type: 'text' },
+];
 
-async function fetchSeasons() {
+async function fetchContests() {
   const query = `
   query {
-    getSeasons {
+    getContests {
       id
-      year
+      name
+      duration
+      description
     }
   }
   `;
@@ -130,30 +168,30 @@ async function fetchSeasons() {
     });
 
     const result = await response.json();
-    if (response.ok && result.data && result.data.getSeasons) {
-      seasons.value = result.data.getSeasons.map((season) => ({
-        ...season,
+    if (response.ok && result.data && result.data.getContests) {
+      contests.value = result.data.getContests.map((contest) => ({
+        ...contest,
         isEditing: false,
       }));
     } else {
-      console.error('При получении сезонов произошла ошибка:', result.errors);
+      console.error('При получении конкурсов произошла ошибка:', result.errors);
       useToast().error(
-        `При получении сезонов произошла ошибка. ${result.errors[0].message}`
+        `При получении конкурсов произошла ошибка. ${result.errors[0].message}`
       );
     }
   } catch (error) {
-    console.error('Error fetching seasons:', error);
+    console.error('Error fetching contests:', error);
     useToast().error(
-      'Ошибка при получении сезонов. Пожалуйста попробуйте снова.'
+      'Ошибка при получении конкурсов. Пожалуйста попробуйте снова.'
     );
   }
 }
 
-async function deleteSeason(id) {
+async function deleteContest(id) {
   const toast = useToast();
   const mutation = `
     mutation {
-      deleteSeason(id: "${id}") {
+      deleteContest(id: "${id}") {
         id
       }
     }
@@ -170,40 +208,42 @@ async function deleteSeason(id) {
     });
 
     const result = await response.json();
-    if (response.ok && result.data && result.data.deleteSeason) {
-      seasons.value = seasons.value.filter((season) => season.id !== id);
-      toast.success('Сезон успешно удален.');
+    if (response.ok && result.data && result.data.deleteContest) {
+      contests.value = contests.value.filter((contest) => contest.id !== id);
+      toast.success('Конкурс успешно удален.');
     } else {
-      console.error('Удаление сезона не удалось:', result.errors);
-      toast.error('Удаление сезона не удалось. Пожалуйста попробуйте снова.');
+      console.error('Удаление конкурса не удалось:', result.errors);
+      toast.error('Удаление конкурса не удалось. Пожалуйста попробуйте снова.');
     }
   } catch (error) {
-    console.error('Ошибка удаления сезона:', error);
-    toast.error('Ошибка удаления сезона. Пожалуйста попробуйте снова.');
+    console.error('Ошибка удаления конкурса:', error);
+    toast.error('Ошибка удаления конкурса. Пожалуйста попробуйте снова.');
   }
 }
 
-function editSeason(season) {
-  season.isEditing = true;
+function editContest(contest) {
+  contest.isEditing = true;
 }
 
-function cancelEdit(season) {
-  season.isEditing = false;
-  fetchSeasons();
+function cancelEdit(contest) {
+  contest.isEditing = false;
+  fetchContests();
 }
 
-async function saveSeason(season) {
+async function saveContest(contest) {
   const toast = useToast();
   const mutation = `
-    mutation($input: UpdateSeasonInput!) {
-      updateSeason(id: "${season.id}", input: $input) {
+    mutation($input: UpdateContestInput!) {
+      updateContest(id: "${contest.id}", input: $input) {
         id
       }
     }
   `;
   const variables = {
     input: {
-      year: season.year,
+      name: contest.name,
+      description: contest.description,
+      duration: contest.duration,
     },
   };
 
@@ -219,16 +259,18 @@ async function saveSeason(season) {
     });
 
     const result = await response.json();
-    if (response.ok && result.data && result.data.updateSeason) {
-      season.isEditing = false;
+    if (response.ok && result.data && result.data.updateContest) {
+      contest.isEditing = false;
       toast.success('Изменения успешно сохранены.');
     } else {
-      console.error('Обновление сезона не удалось:', result.errors);
-      toast.error('Обновление сезона не удалось. Пожалуйста попробуйте снова.');
+      console.error('Обновление конкурса не удалось:', result.errors);
+      toast.error(
+        'Обновление конкурса не удалось. Пожалуйста попробуйте снова.'
+      );
     }
   } catch (error) {
-    console.error('Ошибка обновления сезона:', error);
-    toast.error('Ошибка обновления сезона. Пожалуйста попробуйте снова.');
+    console.error('Ошибка обновления конкурса:', error);
+    toast.error('Ошибка обновления конкурса. Пожалуйста попробуйте снова.');
   }
 }
 
@@ -246,8 +288,8 @@ function closeModal() {
 async function handleModalSubmit(data) {
   const toast = useToast();
   const mutation = `
-    mutation($input: CreateSeasonInput!) {
-      createSeason(input: $input) {
+    mutation($input: CreateContestInput!) {
+      createContest(input: $input) {
         id
       }
     }
@@ -255,7 +297,9 @@ async function handleModalSubmit(data) {
 
   const variables = {
     input: {
-      year: data.year,
+      name: data.name,
+      duration: data.duration,
+      description: data.description,
     },
   };
 
@@ -272,22 +316,24 @@ async function handleModalSubmit(data) {
     });
 
     const result = await response.json();
-    if (response.ok && result.data && result.data.createSeason) {
-      seasons.value.push(result.data.createSeason);
+    if (response.ok && result.data && result.data.createContest) {
+      contests.value.push(result.data.createContest);
       closeModal();
-      toast.success('Сезон успешно создан.');
-      fetchSeasons();
+      toast.success('Конкурс успешно создан.');
+      fetchContests();
     } else {
-      console.error('Creating season failed:', result.errors);
-      toast.error('Ошибка при создании сезона. Пожалуйста попробуйте снова.');
+      console.error('Создание конкурса не удалось:', result.errors);
+      toast.error('Ошибка при создании конкурса. Пожалуйста попробуйте снова.');
     }
   } catch (error) {
-    console.error('Ошибка при создании сезона:', error);
-    toast.error('Ошибка при создании сезона. Пожалуйста попробуйте снова.');
+    console.error('Ошибка при создании конкурса:', error);
+    toast.error('Ошибка при создании конкурса. Пожалуйста попробуйте снова.');
   }
 }
 
-onMounted(fetchSeasons);
+onMounted(() => {
+  fetchContests();
+});
 
 definePageMeta({
   layout: 'admin',

@@ -3,12 +3,10 @@ definePageMeta({
   middleware: 'auth',
   layout: 'admin',
 });
-import  Gantt  from 'frappe-gantt';
+import Gantt from 'frappe-gantt';
 import { useToast } from 'vue-toastification';
 
 const events = ref([]);
-
-
 
 async function fetchEvents() {
   const query = `
@@ -67,20 +65,22 @@ onMounted(() => {
 });
 
 function renderGanttChart(events: any) {
-  new Gantt("#gantt", events.value, {
+  new Gantt('#gantt', events.value, {
     header_height: 50,
     column_width: 30,
     step: 24,
-    view_modes: ["Quarter Day", "Half Day", "Day", "Week", "Month"],
+    view_modes: ['Quarter Day', 'Half Day', 'Day', 'Week', 'Month'],
     bar_height: 20,
     bar_corner_radius: 3,
     arrow_curve: 5,
     padding: 18,
-    view_mode: "Day",
-    date_format: "YYYY-MM-DD",
-    language: "ru", 
-    on_date_change: (task, start, end) => useToast().info(`${task} - ${start} - ${end}`),
-    on_progress_change: (task, progress) => useToast().info(`${task} - ${progress}`),
+    view_mode: 'Day',
+    date_format: 'YYYY-MM-DD',
+    language: 'ru',
+    on_date_change: (task, start, end) =>
+      useToast().info(`${task} - ${start} - ${end}`),
+    on_progress_change: (task, progress) =>
+      useToast().info(`${task} - ${progress}`),
     custom_popup_html: (task) => `
       <div class="details-container">
         <h5>${task.name}</h5>
@@ -88,9 +88,8 @@ function renderGanttChart(events: any) {
         <p>Дата окончания: ${task.end}</p>
       </div>
     `,
-  })
+  });
 }
-
 </script>
 <template>
   <div>
@@ -101,7 +100,7 @@ function renderGanttChart(events: any) {
       Добро пожаловать в панель администрирования. Используйте боковое меню для
       навигации по разным разделам.
     </p>
-    <div class="mt-6 grid  md:grid-cols-2 xl:grid-cols-2 gap-6">
+    <div class="mt-6 grid md:grid-cols-2 xl:grid-cols-2 gap-6">
       <div
         class="bg-box-bg dark:bg-gray-800 p-6 rounded-lg shadow-md hover:bg-blue-100 dark:hover:bg-blue-800"
       >

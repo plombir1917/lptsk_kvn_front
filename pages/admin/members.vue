@@ -92,11 +92,11 @@
             >
               <select
                 v-if="member.isEditing"
-                v-model="member.team_id"
+                v-model="member.team.id"
                 class="w-full p-2 border rounded"
               >
                 <option v-for="team in teams" :key="team.id" :value="team.id">
-                  {{ team.name }}
+                  {{ member.team.name }}
                 </option>
               </select>
               <span v-else>{{ member.team.name }}</span>
@@ -107,7 +107,7 @@
               <div class="flex gap-1 justify-center">
                 <button
                   v-if="member.isEditing"
-                  @click="saveMember(member)"
+                  @click="saveMember(member, teams)"
                   class="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700"
                 >
                   Сохранить
@@ -315,6 +315,7 @@ function cancelEdit(member) {
   fetchMembers();
 }
 
+//TODO: handle errors WITH TEAM_ID
 async function saveMember(member) {
   const toast = useToast();
   const mutation = `
@@ -322,12 +323,14 @@ async function saveMember(member) {
       updateMember(id: "${member.id}", input: {
         name: "${member.name}",
         phone: "${member.phone}",
-        team: "${member.team}"
+        team_id: "${member.team}"
       }) {
         id
         name
         phone
-        team
+        team {
+        id
+        }
       }
     }
   `;
