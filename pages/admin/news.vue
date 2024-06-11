@@ -50,17 +50,18 @@
             <td
               class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
             >
-              <input
-                v-if="news.isEditing"
-                v-model="news.photo"
-                type="date"
-                class="w-full p-2 border rounded"
-              />
               <img
                 :src="news.photo"
                 alt="Фото"
                 class="w-20 h-20 rounded-full mx-auto"
               />
+              <button
+                v-if="news.isEditing"
+                @click="openPhotoModal(news)"
+                class="mt-1 px-1 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700"
+              >
+                Изменить фото
+              </button>
             </td>
             <td
               class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
@@ -130,6 +131,16 @@
       @close="closeModal"
       @submit="handleModalSubmit"
     />
+
+    <div
+      @click.self="closePhotoModal"
+      v-if="isPhotoModalOpen"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+    >
+      <div class="bg-white rounded-lg shadow-lg p-6 w-1/2">
+        <ImageUpload @save="savePhoto" @close="closePhotoModal" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -137,9 +148,12 @@
 import { ref, onMounted } from 'vue';
 import { useToast } from 'vue-toastification';
 import CreateModal from '@/components/elements/CreateModal.vue';
+import ImageUpload from '@/components/elements/ImageUpload.vue';
 
 const newsList = ref([]);
+const currentNews = ref(null);
 const isModalOpen = ref(false);
+const isPhotoModalOpen = ref(false);
 const modalTitle = ref('');
 const modalFields = ref([]);
 const modalInitialData = ref({});
@@ -292,7 +306,6 @@ async function saveNews(news) {
     input: {
       title: news.title,
       link: news.link,
-      photo: news.photo,
     },
   };
 
@@ -321,6 +334,72 @@ async function saveNews(news) {
     console.error('Ошибка обновления новости:', error);
     toast.error('Ошибка обновления новости. Пожалуйста попробуйте снова.');
   }
+}
+function openPhotoModal(news) {
+  currentNews.value = news;
+  isPhotoModalOpen.value = true;
+}
+
+function closePhotoModal() {
+  isPhotoModalOpen.value = false;
+  currentNews.value = null;
+}
+
+async function savePhoto(formData) {
+  const file = formData.get('photo');
+  const toast = useToast();
+  try {
+    const token = localStorage.getItem('access_token');
+    const operations = {
+      query: `
+        mutation($photo: Upload!, $id: String!) {
+          updateNews(id: $id, input: { photo: $photo }) {
+            id
+          }
+        }
+      `,
+      variables: {
+        id: currentNews.value.id.toString(),
+        photo: null,
+      },
+    };
+    const map = {
+      0: ['variables.photo'],
+    };
+
+    const formData = new FormData();
+    formData.append('operations', JSON.stringify(operations));
+    formData.append('map', JSON.stringify(map));
+    formData.append('0', file, file.name);
+
+    const response = await fetch('http://localhost:3001/graphql', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'apollo-require-preflight': 'true',
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `HTTP error! Status: ${response.status}, Response: ${errorText}`
+      );
+    }
+
+    const result = await response.json();
+    if (result.errors) {
+      console.error('GraphQL errors:', result.errors);
+      toast.error('Ошибка при изменении фото.');
+    } else {
+      toast.success('Фото успешно изменено.');
+    }
+  } catch (error) {
+    console.error('Ошибка при изменении фото:', error);
+    toast.error('Ошибка при изменении фото.');
+  }
+  closePhotoModal();
 }
 
 function openModal(title, fields, initialData = {}) {
