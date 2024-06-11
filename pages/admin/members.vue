@@ -315,15 +315,14 @@ function cancelEdit(member) {
   fetchMembers();
 }
 
-//TODO: handle errors WITH TEAM_ID
 async function saveMember(member) {
+  console.log(member.team);
   const toast = useToast();
   const mutation = `
     mutation {
       updateMember(id: "${member.id}", input: {
         name: "${member.name}",
         phone: "${member.phone}",
-        team_id: "${member.team}"
       }) {
         id
         name
@@ -443,11 +442,62 @@ function closePhotoModal() {
   isPhotoModalOpen.value = false;
 }
 
-async function savePhoto(photoUrl) {
-  if (!currentMember.value) return;
+async function savePhoto(formData) {
+  const file = formData.get('photo');
+  const toast = useToast();
+  try {
+    const token = localStorage.getItem('access_token');
+    const operations = {
+      query: `
+        mutation($photo: Upload!, $id: String!) {
+          updateMember(id: $id, input: { photo: $photo }) {
+            id
+          }
+        }
+      `,
+      variables: {
+        id: currentMember.value.id.toString(),
+        photo: null,
+      },
+    };
+    const map = {
+      0: ['variables.photo'],
+    };
 
-  currentMember.value.photo = photoUrl;
-  await saveMember(currentMember.value);
+    const formData = new FormData();
+    formData.append('operations', JSON.stringify(operations));
+    formData.append('map', JSON.stringify(map));
+    formData.append('0', file, file.name);
+
+    const response = await fetch('http://localhost:3001/graphql', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'apollo-require-preflight': 'true',
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `HTTP error! Status: ${response.status}, Response: ${errorText}`
+      );
+    }
+
+    const result = await response.json();
+    if (result.errors) {
+      console.error('GraphQL errors:', result.errors);
+      toast.error('Ошибка при изменении фото.');
+    } else {
+      toast.success('Фото успешно изменено.');
+    }
+  } catch (error) {
+    console.error('Ошибка при изменении фото:', error);
+    toast.error('Ошибка при изменении фото.');
+  }
+  fetchMembers();
+  fetchTeams();
   closePhotoModal();
 }
 

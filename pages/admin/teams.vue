@@ -314,8 +314,8 @@ async function saveTeam(team) {
         name: "${team.name}",
         achievments: "${team.achievments}",
         home: "${team.home}"
-        rate: "${team.rate}"
-        active: "${team.active}"
+        rate: ${team.rate}
+        active: ${team.active}
       }) {
         id        
       }
@@ -335,6 +335,7 @@ async function saveTeam(team) {
 
     const result = await response.json();
     if (response.ok && result.data && result.data.updateTeam) {
+      fetchTeams();
       team.isEditing = false;
       toast.success('Команда успешно обновлена.');
     } else {
@@ -368,11 +369,61 @@ function closePhotoModal() {
   isPhotoModalOpen.value = false;
 }
 
-async function savePhoto(photoUrl) {
-  if (!currentTeam.value) return;
+async function savePhoto(formData) {
+  const file = formData.get('photo');
+  const toast = useToast();
+  try {
+    const token = localStorage.getItem('access_token');
+    const operations = {
+      query: `
+        mutation($photo: Upload!, $id: String!) {
+          updateTeam(id: $id, input: { photo: $photo }) {
+            id
+          }
+        }
+      `,
+      variables: {
+        id: currentTeam.value.id.toString(),
+        photo: null,
+      },
+    };
+    const map = {
+      0: ['variables.photo'],
+    };
 
-  currentTeam.value.photo = photoUrl;
-  await saveTeam(currentTeam.value);
+    const formData = new FormData();
+    formData.append('operations', JSON.stringify(operations));
+    formData.append('map', JSON.stringify(map));
+    formData.append('0', file, file.name);
+
+    const response = await fetch('http://localhost:3001/graphql', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'apollo-require-preflight': 'true',
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `HTTP error! Status: ${response.status}, Response: ${errorText}`
+      );
+    }
+
+    const result = await response.json();
+    if (result.errors) {
+      console.error('GraphQL errors:', result.errors);
+      toast.error('Ошибка при изменении фото.');
+    } else {
+      toast.success('Фото успешно изменено.');
+    }
+  } catch (error) {
+    console.error('Ошибка при изменении фото:', error);
+    toast.error('Ошибка при изменении фото.');
+  }
+  fetchTeams();
   closePhotoModal();
 }
 

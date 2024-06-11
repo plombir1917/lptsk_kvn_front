@@ -322,6 +322,7 @@ async function saveNews(news) {
 
     const result = await response.json();
     if (response.ok && result.data && result.data.updateNews) {
+      fetchNews();
       news.isEditing = false;
       toast.success('Изменения успешно сохранены.');
     } else {
@@ -335,6 +336,7 @@ async function saveNews(news) {
     toast.error('Ошибка обновления новости. Пожалуйста попробуйте снова.');
   }
 }
+
 function openPhotoModal(news) {
   currentNews.value = news;
   isPhotoModalOpen.value = true;
@@ -399,6 +401,7 @@ async function savePhoto(formData) {
     console.error('Ошибка при изменении фото:', error);
     toast.error('Ошибка при изменении фото.');
   }
+  fetchNews();
   closePhotoModal();
 }
 

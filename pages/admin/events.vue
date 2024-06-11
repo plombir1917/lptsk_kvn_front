@@ -71,13 +71,13 @@
               class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
             >
               <img
-                :src="'/kvn-logo.jpg'"
+                :src="event.photo"
                 alt="Фото"
                 class="w-20 h-20 rounded-full mx-auto"
               />
               <button
                 v-if="event.isEditing"
-                @click="openPhotoModal(account)"
+                @click="openPhotoModal(event)"
                 class="mt-1 px-1 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700"
               >
                 Изменить фото
@@ -352,6 +352,7 @@ async function saveEvent(event) {
 
     const result = await response.json();
     if (response.ok && result.data && result.data.updateEvent) {
+      fetchEvents();
       event.isEditing = false;
       toast.success('Изменения успешно сохранены.');
     } else {
@@ -364,6 +365,64 @@ async function saveEvent(event) {
     console.error('Ошибка обновления мероприятия:', error);
     toast.error('Ошибка обновления мероприятия. Пожалуйста попробуйте снова.');
   }
+}
+
+async function savePhoto(formData) {
+  const file = formData.get('photo');
+  const toast = useToast();
+  try {
+    const token = localStorage.getItem('access_token');
+    const operations = {
+      query: `
+        mutation($photo: Upload!, $id: String!) {
+          updateEvent(id: $id, input: { photo: $photo }) {
+            id
+          }
+        }
+      `,
+      variables: {
+        id: currentEvent.value.id.toString(),
+        photo: null,
+      },
+    };
+    const map = {
+      0: ['variables.photo'],
+    };
+
+    const formData = new FormData();
+    formData.append('operations', JSON.stringify(operations));
+    formData.append('map', JSON.stringify(map));
+    formData.append('0', file, file.name);
+
+    const response = await fetch('http://localhost:3001/graphql', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'apollo-require-preflight': 'true',
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `HTTP error! Status: ${response.status}, Response: ${errorText}`
+      );
+    }
+
+    const result = await response.json();
+    if (result.errors) {
+      console.error('GraphQL errors:', result.errors);
+      toast.error('Ошибка при изменении фото.');
+    } else {
+      toast.success('Фото успешно изменено.');
+    }
+  } catch (error) {
+    console.error('Ошибка при изменении фото:', error);
+    toast.error('Ошибка при изменении фото.');
+  }
+  fetchEvents();
+  closePhotoModal();
 }
 
 function openPhotoModal(event) {
