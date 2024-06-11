@@ -413,6 +413,7 @@ async function savePhoto(formData) {
     console.error('Ошибка при изменении фото:', error);
     toast.error('Ошибка при изменении фото.');
   }
+  fetchAccounts();
   closePhotoModal();
 }
 

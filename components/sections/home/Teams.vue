@@ -1,3 +1,58 @@
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useToast } from 'vue-toastification';
+const teams = ref([]);
+
+async function fetchTeams() {
+  const query = `
+  query {
+    getTeams {
+      id
+      name
+      achievments
+      home
+      rate
+      active
+      photo
+    }
+  }
+  `;
+  try {
+    const token = localStorage.getItem('access_token');
+    const response = await fetch('http://localhost:3001/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ query }),
+    });
+
+    const result = await response.json();
+    if (response.ok && result.data && result.data.getTeams) {
+      teams.value = result.data.getTeams.map((team) => ({
+        ...team,
+        isEditing: false,
+      }));
+    } else {
+      console.error('При получении команд произошла ошибка:', result.errors);
+      useToast().error(
+        'При получении команд произошла ошибка. Пожалуйста попробуйте снова.'
+      );
+    }
+  } catch (error) {
+    console.error('Error fetching teams:', error);
+    useToast().error(
+      'Ошибка при получении команд. Пожалуйста попробуйте снова.'
+    );
+  }
+}
+
+onMounted(() => {
+  fetchTeams();
+});
+</script>
+
 <template>
   <section class="pt-16 relative" id="teams">
     <div
@@ -18,7 +73,7 @@
     </div>
     <AtomsContainer class-name="relative">
       <div class="flex justify-between pb-6 relative">
-        <div class="">
+        <div>
           <AtomsTitle texte="Наши команды" />
         </div>
         <div class="flex items-center min-w-max gap-5">
@@ -29,47 +84,16 @@
         class="grid grid-cols-2 items-stretch sm:grid-cols-3 lg:grid-cols-4 gap-x-3 gap-y-10 sm:gap-x-5 sm:gap-y-8"
       >
         <CardsPodCast
+          v-for="team in teams"
+          :key="team.id"
           :button="false"
-          title="Команда крутая"
-          href="#"
-          duration=""
-          cover-image="/kvn-logo-no-bg.png"
-          category=""
-          created-at=""
-          description="Lorem ipsum dolor sit amet,  voluptates porro"
-        />
-
-        <CardsPodCast
-          :button="false"
-          title="Команда крутая"
-          href="#"
-          duration=""
-          cover-image="/kvn-logo-no-bg.png"
-          category=""
-          created-at=""
-          description="Lorem ipsum dolor sit amet,  voluptates porro"
-        />
-
-        <CardsPodCast
-          :button="false"
-          title="Команда крутая"
-          href="#"
-          duration=""
-          cover-image="/kvn-logo-no-bg.png"
-          category=""
-          created-at=""
-          description="Lorem ipsum dolor sit amet,  voluptates porro"
-        />
-
-        <CardsPodCast
-          :button="false"
-          title="Команда крутая"
-          href="#"
-          duration=""
-          cover-image="/kvn-logo-no-bg.png"
-          category=""
-          created-at=""
-          description="Lorem ipsum dolor sit amet,  voluptates porro"
+          :title="team.name"
+          :href="'#'"
+          :duration="''"
+          :cover-image="team.photo"
+          :category="team.home"
+          :created-at="''"
+          :description="team.achievements"
         />
       </div>
     </AtomsContainer>

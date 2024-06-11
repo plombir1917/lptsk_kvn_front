@@ -234,7 +234,7 @@ async function saveContest(contest) {
   const toast = useToast();
   const mutation = `
     mutation($input: UpdateContestInput!) {
-      updateContest(id: "${contest.id}", input: $input) {
+      updateContest(id: ${contest.id}, input: $input) {
         id
       }
     }

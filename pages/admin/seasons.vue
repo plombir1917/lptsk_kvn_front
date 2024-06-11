@@ -153,7 +153,7 @@ async function deleteSeason(id) {
   const toast = useToast();
   const mutation = `
     mutation {
-      deleteSeason(id: "${id}") {
+      deleteSeason(id: ${id}) {
         id
       }
     }
