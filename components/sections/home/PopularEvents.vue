@@ -18,7 +18,7 @@
     </div>
     <AtomsContainer class-name="relative">
       <div class="flex justify-between pb-6 relative">
-        <div class="">
+        <div>
           <AtomsTitle texte="Популярные мероприятия" />
         </div>
         <div class="flex items-center min-w-max gap-5">
@@ -35,49 +35,82 @@
         class="grid grid-cols-2 items-stretch sm:grid-cols-3 lg:grid-cols-4 gap-x-3 gap-y-10 sm:gap-x-5 sm:gap-y-8"
       >
         <CardsPodCast
+          v-for="event in events"
+          :key="event.id"
           :button="true"
-          title="Мероприятие кайфовое"
-          href="#"
-          duration="24min"
-          cover-image="/kvn-logo-no-bg.png"
-          category=""
-          created-at=""
-          description="Lorem ipsum dolor sit amet,  voluptates porro"
-        />
-
-        <CardsPodCast
-          :button="true"
-          title="Мероприятие кайфовое"
-          href="#"
-          duration="24min"
-          cover-image="/kvn-logo-no-bg.png"
-          category=""
-          created-at=""
-          description="Lorem ipsum dolor sit amet,  voluptates porro"
-        />
-
-        <CardsPodCast
-          :button="true"
-          title="Мероприятие кайфовое"
-          href="#"
-          duration="24min"
-          cover-image="/kvn-logo-no-bg.png"
-          category=""
-          created-at=""
-          description="Lorem ipsum dolor sit amet,  voluptates porro"
-        />
-
-        <CardsPodCast
-          :button="true"
-          title="Мероприятие кайфовое"
-          href="#"
-          duration="24min"
-          cover-image="/kvn-logo-no-bg.png"
-          category=""
-          created-at=""
-          description="Lorem ipsum dolor sit amet,  voluptates porro"
+          :title="event.name"
+          :href="event.link"
+          :duration="event.duration"
+          :cover-image="event.photo"
+          :category="event.category"
+          :created-at="event.created_at"
+          :description="event.description"
         />
       </div>
     </AtomsContainer>
   </section>
 </template>
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useToast } from 'vue-toastification';
+
+const events = ref([]);
+
+async function fetchEvents() {
+  const query = `
+  query {
+    getEvents {
+      id
+      name
+      date
+      place
+      description
+      photo
+      link
+      created_at
+    }
+  }
+  `;
+  try {
+    const token = localStorage.getItem('access_token');
+    const response = await fetch('http://localhost:3001/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ query }),
+    });
+
+    const result = await response.json();
+    if (response.ok && result.data && result.data.getEvents) {
+      events.value = result.data.getEvents.map((event) => ({
+        ...event,
+        date: new Date(event.date).toISOString().split('T')[0],
+      }));
+    } else {
+      console.error(
+        'При получении мероприятий произошла ошибка:',
+        result.errors
+      );
+      useToast().error(
+        `При получении мероприятий произошла ошибка. ${result.errors[0].message}`
+      );
+    }
+  } catch (error) {
+    console.error('Error fetching events:', error);
+    useToast().error(
+      'Ошибка при получении мероприятий. Пожалуйста попробуйте снова.'
+    );
+  }
+}
+
+onMounted(() => {
+  fetchEvents();
+});
+</script>
+
+<style scoped>
+/* Добавьте стили, если необходимо */
+</style>

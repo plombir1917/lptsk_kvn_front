@@ -26,8 +26,8 @@
         </h2>
       </div>
       <div class="pt-3 sm:pt-5 min-h-max h-max" v-if="button">
-        <NuxtLink
-          :to="href"
+        <button
+          @click="openModal"
           class="flex relative group items-center text-white px-5 py-2 bg-blue-500 gap-1 text-sm w-max rounded-full"
         >
           <span
@@ -51,12 +51,40 @@
             </svg>
             Смотреть
           </span>
-        </NuxtLink>
+        </button>
       </div>
     </div>
   </div>
+
+  <transition name="modal">
+    <div
+      v-if="isModalOpen"
+      class="fixed z-50 inset-0 flex items-center justify-center p-4"
+    >
+      <div
+        @click="closeModal"
+        class="absolute inset-0 bg-gray-900 opacity-50 z-40"
+      ></div>
+
+      <div
+        class="relative z-50 bg-gray-700 p-1 rounded-lg max-w-screen-lg w-full h-auto md:w-3/4 md:h-3/4 overflow-hidden"
+      >
+        <iframe
+          :src="videoUrl"
+          title="Video player"
+          frameborder="0"
+          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; autoplay; fullscreen; picture-in-picture"
+          allowfullscreen
+          class="w-full h-64 md:h-full"
+        ></iframe>
+      </div>
+    </div>
+  </transition>
 </template>
+
 <script lang="ts" setup>
+import { ref } from 'vue';
+
 const {
   title,
   href,
@@ -76,4 +104,15 @@ const {
   createdAt: string;
   description: string;
 }>();
+
+const isModalOpen = ref(false);
+const videoUrl = ref(href);
+
+function openModal() {
+  isModalOpen.value = true;
+}
+
+function closeModal() {
+  isModalOpen.value = false;
+}
 </script>

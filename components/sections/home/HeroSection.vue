@@ -62,7 +62,7 @@
               :isOpen="ticketModalOpen"
               :closeModal="closeTicketModal"
             />
-            <AtomsModal />
+            <AtomsModal :videoUrl="videoUrl" />
           </div>
           <div class="pt-8 lg:pt-10 w-max mx-auto lg:mx-0">
             <div
@@ -122,6 +122,8 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import TicketModal from '~/components/elements/TicketModal.vue';
+
+const videoUrl = 'https://vk.com/video_ext.php?oid=-56052247&id=456239806&hd=3';
 
 const ticketModalOpen = ref(false);
 

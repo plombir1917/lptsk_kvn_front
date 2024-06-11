@@ -1,27 +1,9 @@
-<script lang="ts" setup>
-import { ref } from 'vue';
-import type { Ref } from 'vue';
-
-const videoUrl: string =
-  'https://vk.com/video_ext.php?oid=-56052247&id=456239806&hd=3';
-
-const isModalOpen: Ref<boolean> = ref(false);
-
-function openModal() {
-  isModalOpen.value = true;
-}
-
-function closeModal() {
-  isModalOpen.value = false;
-}
-</script>
-
 <template>
   <transition name="modal">
     <div>
       <AtomsLinkBtn
-        href="/"
-        @click="openModal"
+        href="#"
+        @click.prevent="openModal"
         variant="costum"
         costum-span-class="px-6 md:px-7 hover:bg-primary/10"
         costum-text-color="text-blue-500"
@@ -75,3 +57,27 @@ function closeModal() {
     </div>
   </transition>
 </template>
+
+<script lang="ts" setup>
+import { ref, defineProps } from 'vue';
+import type { Ref } from 'vue';
+
+// Определение пропсов
+const props = defineProps<{
+  videoUrl: string;
+}>();
+
+const isModalOpen: Ref<boolean> = ref(false);
+
+function openModal() {
+  isModalOpen.value = true;
+}
+
+function closeModal() {
+  isModalOpen.value = false;
+}
+</script>
+
+<style scoped>
+/* Добавьте стили, если необходимо */
+</style>
