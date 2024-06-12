@@ -40,11 +40,7 @@
           :button="true"
           :title="event.name"
           :href="event.link"
-          :duration="event.duration"
           :cover-image="event.photo"
-          :category="event.category"
-          :created-at="event.created_at"
-          :description="event.description"
         />
       </div>
     </AtomsContainer>

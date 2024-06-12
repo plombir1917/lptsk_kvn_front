@@ -9,11 +9,6 @@
         width="280"
         class="w-full h-32 sm:h-36 md:h-40 lg:h-48 rounded-xl object-cover"
       />
-      <span
-        class="absolute top-2 right-2 px-2 rounded-full text-sm text-white bg-blue-500"
-      >
-        {{ duration }}
-      </span>
     </div>
     <div
       class="lg:px-2 pt-2 lg:pb-4 xl:px-4 md:pt-4 h-full flex flex-col justify-between"
@@ -85,24 +80,11 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-const {
-  title,
-  href,
-  duration,
-  coverImage,
-  category,
-  createdAt,
-  description,
-  button,
-} = defineProps<{
+const { title, href, coverImage, button } = defineProps<{
   button: boolean;
   title: string;
   href: string;
-  duration: string;
   coverImage: string;
-  category: string;
-  createdAt: string;
-  description: string;
 }>();
 
 const isModalOpen = ref(false);

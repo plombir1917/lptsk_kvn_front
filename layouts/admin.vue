@@ -29,7 +29,7 @@
                 Главная
               </nuxt-link>
             </li>
-            <li class="mt-3">
+            <li v-if="role === 'DIRECTOR'" class="mt-3">
               <nuxt-link
                 to="/admin/accounts"
                 :class="[
@@ -43,7 +43,7 @@
                 Аккаунты
               </nuxt-link>
             </li>
-            <li class="mt-3">
+            <li v-if="role === 'DIRECTOR' || role === 'EDITOR'" class="mt-3">
               <nuxt-link
                 to="/admin/seasons"
                 :class="[
@@ -57,7 +57,7 @@
                 Сезоны
               </nuxt-link>
             </li>
-            <li class="mt-3">
+            <li v-if="role === 'DIRECTOR' || role === 'ADMIN'" class="mt-3">
               <nuxt-link
                 to="/admin/news"
                 :class="[
@@ -71,8 +71,7 @@
                 Новости
               </nuxt-link>
             </li>
-
-            <li class="mt-3">
+            <li v-if="role === 'DIRECTOR' || role === 'EDITOR'" class="mt-3">
               <nuxt-link
                 to="/admin/events"
                 :class="[
@@ -86,7 +85,7 @@
                 Мероприятия
               </nuxt-link>
             </li>
-            <li class="mt-3">
+            <li class="mt-3" v-if="role === 'DIRECTOR'">
               <nuxt-link
                 to="/admin/organizers"
                 :class="[
@@ -100,7 +99,7 @@
                 Организаторы
               </nuxt-link>
             </li>
-            <li class="mt-3">
+            <li v-if="role === 'DIRECTOR' || role === 'EDITOR'" class="mt-3">
               <nuxt-link
                 to="/admin/teams"
                 :class="[
@@ -114,7 +113,7 @@
                 Команды
               </nuxt-link>
             </li>
-            <li class="mt-3">
+            <li v-if="role === 'DIRECTOR' || role === 'EDITOR'" class="mt-3">
               <nuxt-link
                 to="/admin/members"
                 :class="[
@@ -128,7 +127,21 @@
                 Участники
               </nuxt-link>
             </li>
-            <li class="mt-3">
+            <li v-if="role === 'DIRECTOR' || role === 'EDITOR'" class="mt-3">
+              <nuxt-link
+                to="/admin/contests"
+                :class="[
+                  'flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 hover:text-blue-500',
+                  isActiveRoute('/admin/contests')
+                    ? 'bg-blue-100 dark:bg-blue-800 text-blue-500'
+                    : '',
+                ]"
+              >
+                <ContestIcon class="w-5 h-5 mr-2" />
+                Конкурсы
+              </nuxt-link>
+            </li>
+            <li v-if="role === 'DIRECTOR' || role === 'ADMIN'" class="mt-3">
               <nuxt-link
                 to="/admin/tickets"
                 :class="[
@@ -144,24 +157,10 @@
             </li>
             <li class="mt-3">
               <nuxt-link
-                to="/admin/contests"
-                :class="[
-                  'flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 hover:text-blue-500',
-                  isActiveRoute('/admin/contests')
-                    ? 'bg-blue-100 dark:bg-blue-800 text-blue-500'
-                    : '',
-                ]"
-              >
-                <ContestIcon class="w-5 h-5 mr-2" />
-                Конкурсы
-              </nuxt-link>
-            </li>
-            <li class="mt-3">
-              <nuxt-link
                 to="/admin/profile"
                 :class="[
                   'flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 hover:text-blue-500',
-                  isActiveRoute('/admin/settings')
+                  isActiveRoute('/admin/profile')
                     ? 'bg-blue-100 dark:bg-blue-800 text-blue-500'
                     : '',
                 ]"
@@ -228,10 +227,12 @@ import {
   StarIcon as SeasonIcon,
 } from '@heroicons/vue/24/outline';
 import { useRouter, useRoute } from 'vue-router';
-
+import { ref, onMounted } from 'vue';
 import { useState } from '#imports';
 
 const isLoading = useState('isLoading', () => true);
+
+const role = ref('');
 
 const router = useRouter();
 const route = useRoute();
@@ -246,6 +247,48 @@ function logout() {
 function isActiveRoute(path) {
   return route.path === path;
 }
+
+// Получение профиля пользователя
+const fetchProfile = async () => {
+  const query = `
+    query {
+      getAccountByToken {
+        role
+      }
+    }
+  `;
+
+  try {
+    const token = localStorage.getItem('access_token');
+    const response = await fetch('http://localhost:3001/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ query }),
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.data && result.data.getAccountByToken) {
+      const account = result.data.getAccountByToken;
+      role.value = account.role; // Сохраняем роль пользователя
+    } else {
+      alert(
+        'Ошибка при получении данных профиля. Пожалуйста, попробуйте снова.'
+      );
+    }
+  } catch (error) {
+    alert('Произошла ошибка. Пожалуйста, попробуйте снова.');
+  }
+};
+
+// Получение данных профиля при монтировании компонента
+onMounted(async () => {
+  await fetchProfile();
+  isLoading.value = false;
+});
 
 // Обновляем head для страницы
 useHead({

@@ -89,11 +89,7 @@ onMounted(() => {
           :button="false"
           :title="team.name"
           :href="'#'"
-          :duration="''"
           :cover-image="team.photo"
-          :category="team.home"
-          :created-at="''"
-          :description="team.achievements"
         />
       </div>
     </AtomsContainer>
