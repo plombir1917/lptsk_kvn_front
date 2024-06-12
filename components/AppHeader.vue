@@ -29,8 +29,8 @@ const navLinks = [
     href: '/#teams',
   },
   {
-    text: 'Билеты',
-    href: '/',
+    text: 'Информация',
+    href: '/#stats',
   },
 ];
 </script>
