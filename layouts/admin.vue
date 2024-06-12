@@ -144,7 +144,7 @@
             </li>
             <li class="mt-3">
               <nuxt-link
-                to="/admin/settings"
+                to="/admin/profile"
                 :class="[
                   'flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 hover:text-blue-500',
                   isActiveRoute('/admin/settings')
