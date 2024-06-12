@@ -372,18 +372,19 @@ const changePassword = async () => {
   }
 
   const mutation = `
-    mutation($id: ID!, $currentPassword: String!, $newPassword: String!) {
-      changePassword(id: $id, currentPassword: $currentPassword, newPassword: $newPassword) {
-        success
-        message
+    mutation($input: ChangePasswordInput!) {
+      changePassword(input: $input){
+      id
       }
     }
   `;
 
   const variables = {
-    id: profile.value.id,
-    currentPassword,
-    newPassword,
+    input: {
+      login: profile.value.email,
+      oldPassword: currentPassword,
+      newPassword,
+    },
   };
 
   try {
@@ -399,7 +400,7 @@ const changePassword = async () => {
 
     const result = await response.json();
 
-    if (response.ok && result.data && result.data.changePassword.success) {
+    if (response.ok && result.data) {
       useToast().success('Пароль успешно изменен!');
       closeChangePasswordModal();
     } else {
