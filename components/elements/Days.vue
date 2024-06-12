@@ -9,7 +9,9 @@
           v-for="day in daysInMonth"
           :key="day"
           :class="{
-            'bg-green-100 text-green-800': isEventDay(day),
+            'bg-green-100 text-green-800': isEventDay(day) && !isEventPast(day),
+            'bg-yellow-100 text-yellow-800':
+              isEventDay(day) && isEventPast(day),
             'bg-blue-100': !isEventDay(day),
             'p-2 rounded-lg text-center cursor-pointer hover:bg-blue-200': true,
             'opacity-50 cursor-not-allowed': isDisabled(day),
@@ -27,7 +29,7 @@
       </button>
     </div>
     <div v-else>
-      <div id="vk_post_-56052247_13636"></div>
+      <div :id="`vk_post_${selectedEvent.value.id}`"></div>
       <button
         @click="clearEvent"
         class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
@@ -80,6 +82,11 @@ function isEventDay(day: number): boolean {
   return props.events.some((event) => event.date === dateString);
 }
 
+function isEventPast(day: number): boolean {
+  const date = new Date(props.selectedYear, props.selectedMonth, day);
+  return date < new Date();
+}
+
 function isDisabled(day: number): boolean {
   return !isEventDay(day);
 }
@@ -91,7 +98,6 @@ function selectDay(day: number) {
   const event = props.events.find((event) => event.date === dateString);
   if (event) {
     selectedEvent.value = event;
-    console.log(selectedEvent.value);
     loadVKPost(event.id);
   }
 }
@@ -116,16 +122,14 @@ function goBack() {
 }
 
 function loadVKPost(id: string) {
-  const first = id.split('_')[0];
-  const second = id.split('_')[1];
-  console.log(+first, +second);
+  const [first, second] = id.split('_').map(Number);
   const script = document.createElement('script');
   script.src = 'https://vk.com/js/api/openapi.js?173';
   script.onload = () => {
     VK.Widgets.Post(
       `vk_post_${id}`,
-      +first,
-      +second,
+      first,
+      second,
       'wkTnW8GTzftJZWKZdA0w9cRlp-Vx'
     );
   };
