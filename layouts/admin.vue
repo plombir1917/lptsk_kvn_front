@@ -91,7 +91,7 @@
                 to="/admin/organizers"
                 :class="[
                   'flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 hover:text-blue-500',
-                  isActiveRoute('/admin/events')
+                  isActiveRoute('/admin/organizers')
                     ? 'bg-blue-100 dark:bg-blue-800 text-blue-500'
                     : '',
                 ]"
