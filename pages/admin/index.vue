@@ -9,10 +9,9 @@ import { useToast } from 'vue-toastification';
 import { ref, onMounted, watch } from 'vue';
 import { Chart, registerables } from 'chart.js';
 import 'chartjs-adapter-date-fns';
-import zoomPlugin from 'chartjs-plugin-zoom';
 
 if (typeof window !== 'undefined') {
-  Chart.register(...registerables, zoomPlugin);
+  Chart.register(...registerables);
 }
 
 const events = ref([]);
@@ -161,18 +160,24 @@ function renderEventChart(events: any) {
   const ctx = document.getElementById('eventChart') as HTMLCanvasElement;
   if (!ctx) return;
 
-  const eventCounts: { [key: string]: number } = {};
-  events.value.forEach((event: any) => {
-    const day = new Date(event.start).toISOString().split('T')[0]; // Get 'YYYY-MM-DD'
-    if (eventCounts[day]) {
-      eventCounts[day]++;
-    } else {
-      eventCounts[day] = 1;
-    }
-  });
+  const datasets = events.value.map((event: any, index: number) => {
+    const start = new Date(event.created_at).toISOString();
+    const end = new Date(event.date).toISOString();
+    const yValue = index + 1; // Y value based on event index
 
-  const labels = Object.keys(eventCounts);
-  const data = Object.values(eventCounts);
+    return {
+      label: `${event.name}`,
+      data: [
+        { x: start, y: yValue },
+        { x: end, y: yValue },
+      ],
+      borderColor: getRandomColor(),
+      fill: false,
+      tension: 0.1,
+      borderWidth: 2,
+      pointRadius: 0,
+    };
+  });
 
   if (chart) {
     chart.destroy();
@@ -181,17 +186,7 @@ function renderEventChart(events: any) {
   chart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels,
-      datasets: [
-        {
-          label: 'Количество мероприятий',
-          data,
-          borderColor: 'rgba(75, 192, 192, 1)',
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          fill: true,
-          tension: 0.1,
-        },
-      ],
+      datasets,
     },
     options: {
       responsive: true,
@@ -199,8 +194,11 @@ function renderEventChart(events: any) {
         x: {
           type: 'time',
           time: {
-            unit: 'day', // Set the unit to 'day'
+            unit: 'day',
             tooltipFormat: 'yyyy-MM-dd',
+            displayFormats: {
+              day: 'dd.MM.yyyy',
+            },
           },
           title: {
             display: true,
@@ -210,30 +208,28 @@ function renderEventChart(events: any) {
         y: {
           title: {
             display: true,
-            text: 'Количество мероприятий',
+            text: 'Количество',
           },
           beginAtZero: true,
         },
       },
       plugins: {
-        zoom: {
-          pan: {
-            enabled: true,
-            mode: 'x',
-          },
-          zoom: {
-            wheel: {
-              enabled: true,
-            },
-            pinch: {
-              enabled: true,
-            },
-            mode: 'x',
-          },
+        legend: {
+          display: true,
+          position: 'top',
         },
       },
     },
   });
+}
+
+function getRandomColor() {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
 }
 </script>
 
@@ -253,6 +249,9 @@ function renderEventChart(events: any) {
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
           Статистика
         </h2>
+        <p class="my-4 text-gray-600 dark:text-gray-300">
+          Организованных мероприятий.
+        </p>
         <label
           for="organizer"
           class="block text-sm font-medium text-gray-700 dark:text-gray-200"
@@ -275,7 +274,9 @@ function renderEventChart(events: any) {
           </option>
         </select>
         <div id="gantt" class="gantt-target mt-6"></div>
-        <canvas id="eventChart" class="mt-6"></canvas>
+        <div style="overflow-x: auto">
+          <canvas id="eventChart" class="mt-6"></canvas>
+        </div>
       </div>
       <div
         class="bg-box-bg dark:bg-gray-800 p-6 rounded-lg shadow-md hover:bg-blue-100 dark:hover:bg-blue-800"
