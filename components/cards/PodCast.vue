@@ -66,7 +66,7 @@
       >
         <iframe
           :src="videoUrl"
-          title="Video player"
+          title="VK video player"
           frameborder="0"
           allow="accelerometer; clipboard-write; encrypted-media; gyroscope; autoplay; fullscreen; picture-in-picture"
           allowfullscreen

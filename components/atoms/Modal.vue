@@ -7,6 +7,7 @@
         variant="costum"
         costum-span-class="px-6 md:px-7 hover:bg-primary/10"
         costum-text-color="text-blue-500"
+        v-if="button"
       >
         <div class="flex items-center gap-3">
           <span class="p-2 rounded-full border border-blue-500">
@@ -65,6 +66,7 @@ import type { Ref } from 'vue';
 // Определение пропсов
 const props = defineProps<{
   videoUrl: string;
+  button: boolean;
 }>();
 
 const isModalOpen: Ref<boolean> = ref(false);

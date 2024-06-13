@@ -62,7 +62,7 @@
               :isOpen="ticketModalOpen"
               :closeModal="closeTicketModal"
             />
-            <AtomsModal :videoUrl="videoUrl" />
+            <AtomsModal :videoUrl="videoUrl" :button="true" />
           </div>
           <div class="pt-8 lg:pt-10 w-max mx-auto lg:mx-0">
             <div

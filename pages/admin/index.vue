@@ -160,16 +160,38 @@ function renderEventChart(events: any) {
   const ctx = document.getElementById('eventChart') as HTMLCanvasElement;
   if (!ctx) return;
 
-  const datasets = events.value.map((event: any, index: number) => {
-    const start = new Date(event.created_at).toISOString();
-    const end = new Date(event.date).toISOString();
-    const yValue = index + 1; // Y value based on event index
+  // Sort events by start date
+  events.value.sort(
+    (a: any, b: any) =>
+      new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+  );
+
+  // Track ongoing events
+  const ongoingEvents: { [key: string]: number } = {};
+
+  // Prepare datasets
+  const datasets = events.value.map((event: any) => {
+    const start = new Date(event.created_at);
+    const end = new Date(event.date);
+
+    // Remove ended events from ongoing list
+    Object.keys(ongoingEvents).forEach((key) => {
+      if (new Date(key) < start) {
+        delete ongoingEvents[key];
+      }
+    });
+
+    // Calculate yValue based on ongoing events count
+    const yValue = Object.keys(ongoingEvents).length + 1;
+
+    // Add current event to ongoing events
+    ongoingEvents[end.toISOString()] = 1;
 
     return {
       label: `${event.name}`,
       data: [
-        { x: start, y: yValue },
-        { x: end, y: yValue },
+        { x: start.toISOString(), y: yValue },
+        { x: end.toISOString(), y: yValue },
       ],
       borderColor: getRandomColor(),
       fill: false,
@@ -223,6 +245,7 @@ function renderEventChart(events: any) {
   });
 }
 
+// Function to generate random color
 function getRandomColor() {
   const letters = '0123456789ABCDEF';
   let color = '#';

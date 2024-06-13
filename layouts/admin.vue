@@ -39,7 +39,7 @@
                     : '',
                 ]"
               >
-                <UserGroupIcon class="w-5 h-5 mr-2" />
+                <IdentificationIcon class="w-5 h-5 mr-2" />
                 Аккаунты
               </nuxt-link>
             </li>
@@ -95,7 +95,7 @@
                     : '',
                 ]"
               >
-                <CalendarIcon class="w-5 h-5 mr-2" />
+                <HandThumbUpIcon class="w-5 h-5 mr-2" />
                 Организаторы
               </nuxt-link>
             </li>
@@ -123,8 +123,22 @@
                     : '',
                 ]"
               >
-                <UserGroupIcon class="w-5 h-5 mr-2" />
+                <FaceSmileIcon class="w-5 h-5 mr-2" />
                 Участники
+              </nuxt-link>
+            </li>
+            <li v-if="role === 'DIRECTOR' || role === 'EDITOR'" class="mt-3">
+              <nuxt-link
+                to="/admin/activity"
+                :class="[
+                  'flex items-center px-4 py-2 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 hover:text-blue-500',
+                  isActiveRoute('/admin/activity')
+                    ? 'bg-blue-100 dark:bg-blue-800 text-blue-500'
+                    : '',
+                ]"
+              >
+                <CalculatorIcon class="w-5 h-5 mr-2" />
+                Активность
               </nuxt-link>
             </li>
             <li v-if="role === 'DIRECTOR' || role === 'EDITOR'" class="mt-3">
@@ -223,8 +237,12 @@ import {
   CalendarIcon,
   NewspaperIcon,
   TicketIcon,
+  IdentificationIcon,
+  FaceSmileIcon,
   ArchiveBoxIcon as ContestIcon,
   StarIcon as SeasonIcon,
+  HandThumbUpIcon,
+  CalculatorIcon,
 } from '@heroicons/vue/24/outline';
 import { useRouter, useRoute } from 'vue-router';
 import { ref, onMounted } from 'vue';

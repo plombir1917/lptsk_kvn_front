@@ -46,7 +46,7 @@
           </p>
           <div v-if="!isEventPastDay(selectedEvent.date)">
             <button
-              @click="buyTicket(selectedEvent.link)"
+              @click="buyTicket(selectedEvent.ticket.link)"
               class="mt-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
             >
               Купить билет
@@ -85,6 +85,9 @@ const props = defineProps<{
     place: string;
     photo: string;
     link: string;
+    ticket: {
+      link: string;
+    };
   }>;
 }>();
 
@@ -99,6 +102,9 @@ const selectedEvent = ref<{
   place: string;
   photo: string;
   link: string;
+  ticket: {
+    link: string;
+  };
 } | null>(null);
 
 const months = [

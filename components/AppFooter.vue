@@ -72,52 +72,52 @@
 const quickLinks = [
   {
     href: '#',
-    text: 'About us',
+    text: 'О нас',
   },
   {
     href: '#',
-    text: 'News',
+    text: 'Новости',
   },
   {
     href: '#',
-    text: 'Team',
+    text: 'Команды',
   },
   {
     href: '#',
-    text: 'Solution',
+    text: 'Решения',
   },
 ];
 const ressourcesLinks = [
   {
     href: '#',
-    text: 'Developpers',
+    text: 'Разработчики',
   },
   {
     href: '#',
-    text: 'Integration',
+    text: 'Внедрение',
   },
   {
     href: '#',
-    text: 'Pricing',
+    text: 'Цены',
   },
 ];
 
 const supportLinks = [
   {
     href: '#',
-    text: 'Contact-us',
+    text: 'Связь',
   },
   {
     href: '#',
-    text: 'Licence',
+    text: 'Лицензии',
   },
   {
     href: '#',
-    text: 'Terms',
+    text: 'Понятия',
   },
   {
     href: '#',
-    text: 'FAQ',
+    text: 'Вопросы',
   },
 ];
 </script>

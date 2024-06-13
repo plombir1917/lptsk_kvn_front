@@ -68,6 +68,9 @@ async function fetchEvents() {
       photo
       link
       created_at
+      ticket {
+        link
+      }
     }
   }
   `;
