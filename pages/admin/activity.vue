@@ -67,7 +67,7 @@
             >
               <div class="flex gap-1 justify-center">
                 <button
-                  @click="deleteActivity(activity.id)"
+                  @click="deleteActivity(activity)"
                   class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
                 >
                   Удалить
@@ -91,7 +91,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useToast } from 'vue-toastification';
 import CreateModal from '@/components/elements/CreateModal.vue';
@@ -142,16 +142,17 @@ async function fetchData() {
     const result = await response.json();
     if (response.ok && result.data && result.data.getTeams) {
       const data = result.data.getTeams;
-      console.log(data);
-      activityList.value = data.flatMap((team) =>
-        team.event.map((event) => ({
-          id: team.id,
-          team_name: team.name,
-          team_rate: event.team_rate,
-          event_id: event.event_id,
-          event_name: event.name,
-        }))
-      );
+      activityList.value = data.flatMap((team) => {
+        return team.event
+          ? team.event.map((event) => ({
+              id: team.id,
+              team_name: team.name,
+              team_rate: event.team_rate,
+              event_id: event.event_id,
+              event_name: event.event.name,
+            }))
+          : [];
+      });
     } else {
       console.error('При получении данных произошла ошибка:', result.errors);
       useToast().error(
@@ -249,15 +250,25 @@ async function fetchEvents() {
   }
 }
 
-async function deleteActivity(id) {
+async function deleteActivity(data) {
+  console.log(data);
   const toast = useToast();
   const mutation = `
-    mutation {
-      deleteActivity(id: "${id}") {
-        id
+    mutation($input: CreateActivityInput!) {
+      deleteActivity(input: $input) {
+        team_id
       }
     }
   `;
+
+  const variables = {
+    input: {
+      team_id: data.id, // Замените на правильное значение или удалите, если не нужно
+      event_id: data.event_id, // Замените на правильное значение или удалите, если не нужно
+      team_rate: 0, // Замените на правильное значение или удалите, если не нужно
+    },
+  };
+
   try {
     const token = localStorage.getItem('access_token');
     const response = await fetch('http://localhost:3001/graphql', {
@@ -266,14 +277,12 @@ async function deleteActivity(id) {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ query: mutation }),
+      body: JSON.stringify({ query: mutation, variables }),
     });
 
     const result = await response.json();
     if (response.ok && result.data && result.data.deleteActivity) {
-      activityList.value = activityList.value.filter(
-        (activity) => activity.id !== id
-      );
+      fetchData();
       toast.success('Активность успешно удалена.');
     } else {
       console.error('Удаление активности не удалось:', result.errors);
@@ -290,7 +299,7 @@ async function deleteActivity(id) {
 function openModal(title, fields, initialData = {}) {
   modalTitle.value = title;
   modalFields.value = fields;
-  modalInitialData.value = initialData;
+  modalInitialData.value = true;
   isModalOpen.value = true;
   fetchTeams();
   fetchEvents();
@@ -305,7 +314,7 @@ async function handleModalSubmit(data) {
   const mutation = `
     mutation($input: CreateActivityInput!) {
       addActivity(input: $input) {
-        id
+        team_id
       }
     }
   `;
