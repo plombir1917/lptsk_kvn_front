@@ -33,6 +33,11 @@
             <th
               class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-center text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
             >
+              Ответственность
+            </th>
+            <th
+              class="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-center text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider"
+            >
               Мероприятие
             </th>
             <th
@@ -57,6 +62,11 @@
               class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
             >
               {{ organizer.account.surname }}
+            </td>
+            <td
+              class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
+            >
+              {{ organizer.responsibility }}
             </td>
             <td
               class="py-2 px-1 border-b border-gray-200 dark:border-gray-700 text-center"
@@ -113,6 +123,7 @@ const modalInitialData = ref({});
 const organizerFields = [
   { name: 'accountId', label: 'Аккаунт', type: 'select', options: accounts },
   { name: 'eventId', label: 'Мероприятие', type: 'select', options: events },
+  { name: 'responsibility', label: 'Ответственность', type: 'text' },
 ];
 
 async function fetchAccounts() {
@@ -205,6 +216,7 @@ async function fetchOrganizers() {
     getOrganizers {
       account_id
       event_id
+      responsibility
       account {
         name
         surname
@@ -253,6 +265,7 @@ async function createOrganizer(data) {
       createOrganizer(input: {
         account_id: "${data.accountId}",
         event_id: ${data.eventId},
+        responsibility: "${data.responsibility}",
       }) {
         account_id
         event_id

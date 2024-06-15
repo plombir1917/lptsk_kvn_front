@@ -1,3 +1,68 @@
+<template>
+  <div>
+    <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">
+      Главная
+    </h1>
+    <p class="mt-4 text-gray-600 dark:text-gray-300">
+      Добро пожаловать в панель администрирования. Используйте боковое меню для
+      навигации по разным разделам.
+    </p>
+    <div class="mt-6 grid md:grid-cols-2 xl:grid-cols-2 gap-6">
+      <div
+        class="bg-box-bg dark:bg-gray-800 p-6 rounded-lg shadow-md hover:bg-blue-100 dark:hover:bg-blue-800"
+      >
+        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
+          Статистика
+        </h2>
+        <p class="my-4 text-gray-600 dark:text-gray-300">
+          Организованных мероприятий.
+        </p>
+        <label
+          for="organizer"
+          class="block text-sm font-medium text-gray-700 dark:text-gray-200"
+        >
+          Выберите организатора:
+        </label>
+        <select
+          id="organizer"
+          v-model="selectedOrganizerId"
+          @change="handleOrganizerChange"
+          class="mt-2 p-2 border border-gray-300 rounded-md"
+        >
+          <option value="" disabled>Выберите организатора</option>
+          <option
+            v-for="organizer in organizers"
+            :key="organizer.id"
+            :value="organizer.id"
+          >
+            {{ organizer.name }}
+          </option>
+        </select>
+        <div id="gantt" class="gantt-target mt-6"></div>
+        <div style="overflow-x: auto">
+          <canvas id="eventChart" class="mt-6"></canvas>
+        </div>
+      </div>
+      <div
+        class="bg-box-bg dark:bg-gray-800 p-6 rounded-lg shadow-md hover:bg-blue-100 dark:hover:bg-blue-800"
+      >
+        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
+          Отчеты
+        </h2>
+        <p class="mt-4 text-gray-600 dark:text-gray-300">
+          Отчёт по организаторам
+        </p>
+        <button
+          @click="downloadExcel"
+          class="mt-4 p-2 bg-blue-500 text-white rounded-md"
+        >
+          Выгрузить
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
 definePageMeta({
   middleware: 'auth',
@@ -15,7 +80,7 @@ if (typeof window !== 'undefined') {
 }
 
 const events = ref([]);
-const organizers = ref([]);
+const organizers: any = ref([]);
 const selectedOrganizerId = ref('');
 let chart: Chart | null = null;
 
@@ -254,61 +319,42 @@ function getRandomColor() {
   }
   return color;
 }
-</script>
 
-<template>
-  <div>
-    <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">
-      Главная
-    </h1>
-    <p class="mt-4 text-gray-600 dark:text-gray-300">
-      Добро пожаловать в панель администрирования. Используйте боковое меню для
-      навигации по разным разделам.
-    </p>
-    <div class="mt-6 grid md:grid-cols-2 xl:grid-cols-2 gap-6">
-      <div
-        class="bg-box-bg dark:bg-gray-800 p-6 rounded-lg shadow-md hover:bg-blue-100 dark:hover:bg-blue-800"
-      >
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
-          Статистика
-        </h2>
-        <p class="my-4 text-gray-600 dark:text-gray-300">
-          Организованных мероприятий.
-        </p>
-        <label
-          for="organizer"
-          class="block text-sm font-medium text-gray-700 dark:text-gray-200"
-        >
-          Выберите организатора:
-        </label>
-        <select
-          id="organizer"
-          v-model="selectedOrganizerId"
-          @change="handleOrganizerChange"
-          class="mt-2 p-2 border border-gray-300 rounded-md"
-        >
-          <option value="" disabled>Выберите организатора</option>
-          <option
-            v-for="organizer in organizers"
-            :key="organizer.id"
-            :value="organizer.id"
-          >
-            {{ organizer.name }}
-          </option>
-        </select>
-        <div id="gantt" class="gantt-target mt-6"></div>
-        <div style="overflow-x: auto">
-          <canvas id="eventChart" class="mt-6"></canvas>
-        </div>
-      </div>
-      <div
-        class="bg-box-bg dark:bg-gray-800 p-6 rounded-lg shadow-md hover:bg-blue-100 dark:hover:bg-blue-800"
-      >
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
-          Отчеты
-        </h2>
-        <p class="mt-4 text-gray-600 dark:text-gray-300">Месячные отчеты.</p>
-      </div>
-    </div>
-  </div>
-</template>
+// Функция для скачивания Excel файла
+async function downloadExcel() {
+  const query = `
+  query {
+    downloadExcel
+  }
+  `;
+  try {
+    const token = localStorage.getItem('access_token');
+    const response = await fetch('http://localhost:3001/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ query }),
+    });
+
+    const result = await response.json();
+    if (response.ok && result.data && result.data.downloadExcel) {
+      const link = document.createElement('a');
+      link.href = result.data.downloadExcel;
+      link.download = 'report.xlsx';
+      link.click();
+    } else {
+      console.error('Ошибка при выгрузке отчета:', result.errors);
+      useToast().error(
+        `Ошибка при выгрузке отчета. ${result.errors[0].message}`
+      );
+    }
+  } catch (error) {
+    console.error('Ошибка при выгрузке отчета:', error);
+    useToast().error(
+      'Ошибка при выгрузке отчета. Пожалуйста попробуйте снова.'
+    );
+  }
+}
+</script>

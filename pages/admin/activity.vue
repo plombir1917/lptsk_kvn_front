@@ -96,7 +96,7 @@ import { ref, onMounted } from 'vue';
 import { useToast } from 'vue-toastification';
 import CreateModal from '@/components/elements/CreateModal.vue';
 
-const activityList = ref([]);
+const activityList: any = ref([]);
 const isModalOpen = ref(false);
 const modalTitle = ref('');
 const modalFields = ref([]);
@@ -142,9 +142,9 @@ async function fetchData() {
     const result = await response.json();
     if (response.ok && result.data && result.data.getTeams) {
       const data = result.data.getTeams;
-      activityList.value = data.flatMap((team) => {
+      activityList.value = data.flatMap((team: any) => {
         return team.event
-          ? team.event.map((event) => ({
+          ? team.event.map((event: any) => ({
               id: team.id,
               team_name: team.name,
               team_rate: event.team_rate,
@@ -189,7 +189,7 @@ async function fetchTeams() {
 
     const result = await response.json();
     if (response.ok && result.data && result.data.getTeams) {
-      teams.value = result.data.getTeams.map((team) => ({
+      teams.value = result.data.getTeams.map((team: any) => ({
         label: team.name,
         value: team.id,
       }));
@@ -229,7 +229,7 @@ async function fetchEvents() {
 
     const result = await response.json();
     if (response.ok && result.data && result.data.getEvents) {
-      events.value = result.data.getEvents.map((event) => ({
+      events.value = result.data.getEvents.map((event: any) => ({
         label: event.name,
         value: event.id,
       }));
@@ -250,7 +250,7 @@ async function fetchEvents() {
   }
 }
 
-async function deleteActivity(data) {
+async function deleteActivity(data: any) {
   console.log(data);
   const toast = useToast();
   const mutation = `
@@ -296,7 +296,7 @@ async function deleteActivity(data) {
   }
 }
 
-function openModal(title, fields, initialData = {}) {
+function openModal(title: any, fields: any, initialData = {}) {
   modalTitle.value = title;
   modalFields.value = fields;
   modalInitialData.value = true;
@@ -309,7 +309,7 @@ function closeModal() {
   isModalOpen.value = false;
 }
 
-async function handleModalSubmit(data) {
+async function handleModalSubmit(data: any) {
   const toast = useToast();
   const mutation = `
     mutation($input: CreateActivityInput!) {
