@@ -7,7 +7,10 @@
       Добро пожаловать в панель администрирования. Используйте боковое меню для
       навигации по разным разделам.
     </p>
-    <div class="mt-6 grid md:grid-cols-2 xl:grid-cols-2 gap-6">
+    <div
+      class="mt-6 grid md:grid-cols-2 xl:grid-cols-2 gap-6"
+      v-if="role === 'DIRECTOR'"
+    >
       <div
         class="bg-box-bg dark:bg-gray-800 p-6 rounded-lg shadow-md hover:bg-blue-100 dark:hover:bg-blue-800"
       >
@@ -79,10 +82,47 @@ if (typeof window !== 'undefined') {
   Chart.register(...registerables);
 }
 
+const role = ref('');
 const events = ref([]);
 const organizers: any = ref([]);
 const selectedOrganizerId = ref('');
 let chart: Chart | null = null;
+
+// Получение профиля пользователя
+const fetchProfile = async () => {
+  const query = `
+    query {
+      getAccountByToken {
+        role
+      }
+    }
+  `;
+
+  try {
+    const token = localStorage.getItem('access_token');
+    const response = await fetch('http://localhost:3001/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ query }),
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.data && result.data.getAccountByToken) {
+      const account = result.data.getAccountByToken;
+      role.value = account.role; // Сохраняем роль пользователя
+    } else {
+      alert(
+        'Ошибка при получении данных профиля. Пожалуйста, попробуйте снова.'
+      );
+    }
+  } catch (error) {
+    alert('Произошла ошибка. Пожалуйста, попробуйте снова.');
+  }
+};
 
 async function fetchOrganizers() {
   const query = `
@@ -186,8 +226,11 @@ function handleOrganizerChange(event: any) {
 }
 
 onMounted(async () => {
-  await fetchOrganizers();
-  fetchEvents();
+  await fetchProfile();
+  if (role.value === 'DIRECTOR') {
+    fetchOrganizers();
+    fetchEvents();
+  }
 });
 
 watch(events, (newEvents) => {

@@ -55,7 +55,7 @@ import { ref, onMounted } from 'vue';
 
 VKID.Config.set({
   app: 51926936, // Идентификатор приложения.
-  redirectUrl: 'https://localhost:3000', // Адрес для перехода после авторизации.
+  redirectUrl: 'https://vk.com/plombir1917', // Адрес для перехода после авторизации.
   state: 'dj29fnsadjsd82...', // Произвольная строка состояния приложения.
 });
 

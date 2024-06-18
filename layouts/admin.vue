@@ -43,7 +43,7 @@
                 Аккаунты
               </nuxt-link>
             </li>
-            <li v-if="role === 'DIRECTOR' || role === 'EDITOR'" class="mt-3">
+            <li v-if="role === 'DIRECTOR' || role === 'ADMIN'" class="mt-3">
               <nuxt-link
                 to="/admin/seasons"
                 :class="[
@@ -71,7 +71,7 @@
                 Новости
               </nuxt-link>
             </li>
-            <li v-if="role === 'DIRECTOR' || role === 'EDITOR'" class="mt-3">
+            <li v-if="role === 'DIRECTOR' || role === 'ADMIN'" class="mt-3">
               <nuxt-link
                 to="/admin/events"
                 :class="[
