@@ -106,13 +106,16 @@ async function login() {
   `;
 
   try {
-    const response = await fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ query }),
-    });
+    const response = await fetch(
+      'https://lptsk-kvn-back.onrender.com/graphql',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query }),
+      }
+    );
 
     const result = await response.json();
 
@@ -138,7 +141,7 @@ async function login() {
 // Пример функции для выполнения авторизованного запроса
 async function fetchWithAuth(query: string) {
   const token = localStorage.getItem('access_token');
-  const response = await fetch('http://localhost:3001/graphql', {
+  const response = await fetch('https://lptsk-kvn-back.onrender.com/graphql', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
