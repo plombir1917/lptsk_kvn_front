@@ -130,14 +130,17 @@ async function fetchData() {
   `;
   try {
     const token = localStorage.getItem('access_token');
-    const response = await fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ query }),
-    });
+    const response = await fetch(
+      'https://lptsk-kvn-back.onrender.com/graphql',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ query }),
+      }
+    );
 
     const result = await response.json();
     if (response.ok && result.data && result.data.getTeams) {
@@ -178,14 +181,17 @@ async function fetchTeams() {
   `;
   try {
     const token = localStorage.getItem('access_token');
-    const response = await fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ query }),
-    });
+    const response = await fetch(
+      'https://lptsk-kvn-back.onrender.com/graphql',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ query }),
+      }
+    );
 
     const result = await response.json();
     if (response.ok && result.data && result.data.getTeams) {
@@ -218,14 +224,17 @@ async function fetchEvents() {
   `;
   try {
     const token = localStorage.getItem('access_token');
-    const response = await fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ query }),
-    });
+    const response = await fetch(
+      'https://lptsk-kvn-back.onrender.com/graphql',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ query }),
+      }
+    );
 
     const result = await response.json();
     if (response.ok && result.data && result.data.getEvents) {
@@ -271,14 +280,17 @@ async function deleteActivity(data: any) {
 
   try {
     const token = localStorage.getItem('access_token');
-    const response = await fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ query: mutation, variables }),
-    });
+    const response = await fetch(
+      'https://lptsk-kvn-back.onrender.com/graphql',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ query: mutation, variables }),
+      }
+    );
 
     const result = await response.json();
     if (response.ok && result.data && result.data.deleteActivity) {
@@ -329,14 +341,17 @@ async function handleModalSubmit(data: any) {
 
   try {
     const token = localStorage.getItem('access_token');
-    const response = await fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ query: mutation, variables }),
-    });
+    const response = await fetch(
+      'https://lptsk-kvn-back.onrender.com/graphql',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ query: mutation, variables }),
+      }
+    );
 
     const result = await response.json();
     if (response.ok && result.data && result.data.addActivity) {

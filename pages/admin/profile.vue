@@ -213,14 +213,17 @@ const fetchProfile = async () => {
 
   try {
     const token = localStorage.getItem('access_token');
-    const response = await fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ query }),
-    });
+    const response = await fetch(
+      'https://lptsk-kvn-back.onrender.com/graphql',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ query }),
+      }
+    );
 
     const result = await response.json();
 
@@ -266,14 +269,17 @@ const updateProfile = async () => {
 
   try {
     const token = localStorage.getItem('access_token');
-    const response = await fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ query: mutation, variables }),
-    });
+    const response = await fetch(
+      'https://lptsk-kvn-back.onrender.com/graphql',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ query: mutation, variables }),
+      }
+    );
 
     const result = await response.json();
 
@@ -324,14 +330,17 @@ async function savePhoto(formData) {
     formData.append('map', JSON.stringify(map));
     formData.append('0', file, file.name);
 
-    const response = await fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'apollo-require-preflight': 'true',
-      },
-      body: formData,
-    });
+    const response = await fetch(
+      'https://lptsk-kvn-back.onrender.com/graphql',
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'apollo-require-preflight': 'true',
+        },
+        body: formData,
+      }
+    );
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -389,14 +398,17 @@ const changePassword = async () => {
 
   try {
     const token = localStorage.getItem('access_token');
-    const response = await fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ query: mutation, variables }),
-    });
+    const response = await fetch(
+      'https://lptsk-kvn-back.onrender.com/graphql',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ query: mutation, variables }),
+      }
+    );
 
     const result = await response.json();
 

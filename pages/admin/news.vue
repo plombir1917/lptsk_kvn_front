@@ -181,14 +181,17 @@ async function fetchNews() {
   `;
   try {
     const token = localStorage.getItem('access_token');
-    const response = await fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ query }),
-    });
+    const response = await fetch(
+      'https://lptsk-kvn-back.onrender.com/graphql',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ query }),
+      }
+    );
 
     const result = await response.json();
     if (response.ok && result.data && result.data.getNews) {
@@ -221,14 +224,17 @@ async function fetchSeasons() {
   `;
   try {
     const token = localStorage.getItem('access_token');
-    const response = await fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ query }),
-    });
+    const response = await fetch(
+      'https://lptsk-kvn-back.onrender.com/graphql',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ query }),
+      }
+    );
 
     const result = await response.json();
     if (response.ok && result.data && result.data.getSeasons) {
@@ -261,14 +267,17 @@ async function deleteNews(id) {
   `;
   try {
     const token = localStorage.getItem('access_token');
-    const response = await fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ query: mutation }),
-    });
+    const response = await fetch(
+      'https://lptsk-kvn-back.onrender.com/graphql',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ query: mutation }),
+      }
+    );
 
     const result = await response.json();
     if (response.ok && result.data && result.data.deleteNews) {
@@ -311,14 +320,17 @@ async function saveNews(news) {
 
   try {
     const token = localStorage.getItem('access_token');
-    const response = await fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ query: mutation, variables }),
-    });
+    const response = await fetch(
+      'https://lptsk-kvn-back.onrender.com/graphql',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ query: mutation, variables }),
+      }
+    );
 
     const result = await response.json();
     if (response.ok && result.data && result.data.updateNews) {
@@ -374,14 +386,17 @@ async function savePhoto(formData) {
     formData.append('map', JSON.stringify(map));
     formData.append('0', file, file.name);
 
-    const response = await fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'apollo-require-preflight': 'true',
-      },
-      body: formData,
-    });
+    const response = await fetch(
+      'https://lptsk-kvn-back.onrender.com/graphql',
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'apollo-require-preflight': 'true',
+        },
+        body: formData,
+      }
+    );
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -452,14 +467,17 @@ async function handleModalSubmit(data, photo) {
     formData.append('map', JSON.stringify(map));
     formData.append('0', photo);
 
-    const response = await fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'apollo-require-preflight': 'true',
-      },
-      body: formData,
-    });
+    const response = await fetch(
+      'https://lptsk-kvn-back.onrender.com/graphql',
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'apollo-require-preflight': 'true',
+        },
+        body: formData,
+      }
+    );
 
     const result = await response.json();
     if (response.ok && result.data && result.data.createNews) {
