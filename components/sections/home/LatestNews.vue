@@ -77,7 +77,7 @@ function scrollToRight(): void {
 }
 
 onMounted(() => {
-  fetchNews();
+  // fetchNews();
   if (window !== null) {
     initScroll();
   }

@@ -103,7 +103,7 @@ async function fetchEvents() {
 }
 
 onMounted(() => {
-  fetchEvents();
+  // fetchEvents();
 });
 </script>
 
