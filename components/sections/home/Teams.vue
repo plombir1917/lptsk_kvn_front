@@ -52,7 +52,7 @@ async function fetchTeams() {
 }
 
 onMounted(() => {
-  fetchTeams();
+  // fetchTeams();
 });
 </script>
 
